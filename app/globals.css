@@ -1,12 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #faf7f3;
-  --sub-background: #f2e6d8;
+  --card-background: #faf7f3;
+  --background: #f2e6d8;
   --primary: #c25a3a;
   --secondary: #a24a2a;
   --accent: #6f7b4a;
   --text: #3e2f2a;
+  --text-300: #d3c5c0;
   --text-500: #5b4a45;
   --text-600: #342521;
 }
@@ -14,11 +15,12 @@
 /* Define CSS variables for tailwind theming */
 @theme inline {
   --color-background: var(--background);
-  --color-sub-background: var(--sub-background);
+  --color-card-background: var(--card-background);
   --color-primary: var(--primary);
   --color-secondary: var(--secondary);
   --color-accent: var(--accent);
   --color-text: var(--text);
+  --color-text-300: var(--text-300);
   --color-text-500: var(--text-500);
   --color-text-600: var(--text-600);
   --font-heading: var(--font-dm-sans);
