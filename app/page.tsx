@@ -1,3 +1,9 @@
+import VideoCard from "./ui/video-card";
+
 export default function Home() {
-  return <></>;
+  return (
+    <>
+      <VideoCard />
+    </>
+  );
 }
