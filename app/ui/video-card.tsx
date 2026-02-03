@@ -3,7 +3,7 @@ import videos from "../lib/placeholder-data";
 
 export default function VideoCard({ video }: { video: (typeof videos)[0] }) {
   return (
-    <div className="w-full bg-card-background rounded-lg shadow-md overflow-hidden">
+    <div className="w-full bg-sub-background rounded-lg shadow-md overflow-hidden">
       <div className="relative pb-[56.25%]">
         <Image
           src={video.thumbnail}

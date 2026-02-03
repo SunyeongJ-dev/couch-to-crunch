@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --card-background: #faf7f3;
+  --sub-background: #faf7f3;
+  --sub-background-70: rgba(250, 247, 243, 0.7);
   --background: #f2e6d8;
   --primary: #c25a3a;
   --secondary: #a24a2a;
@@ -15,7 +16,8 @@
 /* Define CSS variables for tailwind theming */
 @theme inline {
   --color-background: var(--background);
-  --color-card-background: var(--card-background);
+  --color-sub-background: var(--sub-background);
+  --color-sub-background-70: var(--sub-background-70);
   --color-primary: var(--primary);
   --color-secondary: var(--secondary);
   --color-accent: var(--accent);
