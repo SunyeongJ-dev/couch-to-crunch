@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Sans, Inter } from "next/font/google";
 import "./globals.css";
-import Footer from "./ui/footer";
 import Header from "./ui/header";
 
 const dmSans = DM_Sans({
