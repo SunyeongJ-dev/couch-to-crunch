@@ -30,7 +30,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${dmSans.variable} ${inter.variable} antialiased`}>
         <Header />
-        {children}
+        <main className="fixed top-16 left-0 right-0 bottom-0 overflow-y-auto p-8">
+          {children}
+        </main>
       </body>
     </html>
   );
