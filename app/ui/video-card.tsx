@@ -1,7 +1,11 @@
 import Image from "next/image";
-import videos from "../lib/placeholder-data";
+import type { Video } from "../lib/placeholder-data";
 
-export default function VideoCard({ video }: { video: (typeof videos)[0] }) {
+type VideoCardProps = {
+  video: Video;
+};
+
+export default function VideoCard({ video }: VideoCardProps) {
   return (
     <div className="w-full bg-sub-background rounded-lg shadow-md overflow-hidden">
       <div className="relative pb-[56.25%]">
@@ -18,7 +22,7 @@ export default function VideoCard({ video }: { video: (typeof videos)[0] }) {
         <p className="text-text-600 text-sm">{video.channel}</p>
         <div className="flex justify-between">
           <p className="text-text-500 text-xs mt-1">
-            {video.views} • {video.uploadTime}
+            {video.viewCount} • {video.uploadTime}
           </p>
           <p className="text-text-500 text-xs mt-1">{video.duration}</p>
         </div>
