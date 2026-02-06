@@ -3,14 +3,22 @@ import Link from "next/link";
 
 export default function Header() {
   return (
-    <header className="w-full py-4 px-6 bg-sub-background border-b border-text-300">
-      <div className="flex justify-between items-center max-w-7xl mx-auto">
+    <header className="fixed top-0 left-0 right-0 z-50 h-16 w-full px-8 bg-sub-background border-b border-text-300">
+      <div className="flex h-full justify-between items-center">
         <Link href="/">
+          <Image
+            src="/favicon.ico"
+            alt="Couch to Crunch"
+            width={24}
+            height={24}
+            className="block sm:hidden mb-0.5"
+          />
           <Image
             src="/logo.png"
             alt="Couch to Crunch Logo"
-            width={180}
-            height={30}
+            width={200}
+            height={32}
+            className="hidden sm:block"
           />
         </Link>
         <nav>

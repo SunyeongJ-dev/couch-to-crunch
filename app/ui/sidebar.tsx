@@ -12,7 +12,18 @@ export default function SideBar({
   onChange: (next: FilterState) => void;
 }) {
   return (
-    <aside className="hidden sm:block w-56 h-screen bg-sub-background p-8 border-r border-text-300 overflow-y-auto">
+    <aside
+      className="
+        hidden sm:block
+        fixed left-0
+        top-16 bottom-0
+        w-56
+        bg-sub-background
+        border-r border-text-300
+        overflow-y-auto
+        px-8 py-6
+      "
+    >
       <Filter value={value} onChange={onChange} />
     </aside>
   );

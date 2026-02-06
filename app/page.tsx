@@ -22,7 +22,7 @@ export default function Home() {
   return (
     <div className="flex h-screen overflow-hidden">
       <SideBar value={filters} onChange={setFilters} />
-      <main className="flex-1 overflow-y-auto">
+      <main className="fixed top-16 left-0 right-0 bottom-0 sm:left-56 overflow-y-auto p-8">
         <VideoGrid videos={filteredVideos} />
       </main>
     </div>
