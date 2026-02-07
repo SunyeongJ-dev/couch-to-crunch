@@ -20,7 +20,7 @@ export default function Home() {
     return filters.selectedTags.every((tag) => video.tags.includes(tag));
   });
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="h-screen">
       <SideBar value={filters} onChange={setFilters} />
       <VideoGrid videos={filteredVideos} />
     </div>

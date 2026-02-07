@@ -21,7 +21,7 @@ export default async function WatchPage({
         <div className="p-4">
           <div className="flex items-center justify-between gap-4 mb-2">
             <h1 className="text-2xl font-bold">{video?.title}</h1>
-            <button className="px-4 py-2 bg-accent text-white rounded">
+            <button className="px-4 py-2 bg-accent text-sub-background rounded">
               Save
             </button>
           </div>
