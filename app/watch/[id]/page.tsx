@@ -1,57 +1,92 @@
+// app/watch/[id]/page.tsx
 import { notFound } from "next/navigation";
-import type { CachedVideo } from "../../lib/types";
-import { readVideosCache } from "../../lib/videos-cache";
-import {
-  formatDurationFromSeconds,
-  formatPublishedAgo,
-  formatViewCountShort,
-} from "../../lib/video-utils";
+import type { Metadata } from "next";
+import { prisma } from "../../lib/prisma";
 
-export default async function WatchPage({
-  params,
-}: {
+type PageProps = {
   params: Promise<{ id: string }>;
-}) {
+};
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { id } = await params;
 
-  const videos = await readVideosCache();
-  const video: CachedVideo | undefined = videos.find((v) => v.youtubeId === id);
+  const video = await prisma.video.findUnique({
+    where: { youtubeId: id },
+    select: { title: true, channel: true },
+  });
 
-  if (!video) return notFound();
+  if (!video) return { title: "Video not found" };
+
+  return {
+    title: `${video.title} | Couch to Crunch`,
+    description: `Watch ${video.title} by ${video.channel}`,
+  };
+}
+
+export default async function WatchPage({ params }: PageProps) {
+  const { id } = await params;
+
+  const video = await prisma.video.findUnique({
+    where: { youtubeId: id },
+  });
+
+  if (!video) notFound();
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="w-full max-w-3xl pb-4 bg-sub-background rounded-lg shadow-md overflow-hidden">
-        <div className="relative pb-[56.25%]">
-          <iframe
-            src={`https://www.youtube.com/embed/${video.youtubeId}`}
-            title={video.title}
-            className="absolute top-0 left-0 w-full h-full"
-            allowFullScreen
-          />
-        </div>
-        <div className="p-4">
-          <div className="flex items-center justify-between gap-4 mb-2">
-            <h1 className="text-2xl font-bold">{video.title}</h1>
-            <button className="px-4 py-2 bg-accent text-sub-background rounded cursor-pointer">
-              Save
-            </button>
-          </div>
+    <div className="p-4 sm:p-8 max-w-5xl mx-auto bg-sub-background rounded-xl">
+      {/* Player */}
+      <div className="w-full aspect-video rounded-xl overflow-hidden bg-black">
+        <iframe
+          className="w-full h-full"
+          src={`https://www.youtube.com/embed/${video.youtubeId}`}
+          title={video.title}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      </div>
 
-          <p className="text-text-600 text-sm mb-4">{video.channel}</p>
-          <div className="flex justify-between items-center gap-4">
-            <p className="text-text-500 text-xs">
-              {formatViewCountShort(video.viewCount)} •{" "}
-              {formatPublishedAgo(video.publishedAt)}
-            </p>
-            <p className="text-text-500 text-xs">
-              {formatDurationFromSeconds(video.durationSec)}
-            </p>
-          </div>
-          <p className="whitespace-pre-line text-text-600 text-sm mt-4">
-            {video.description}
-          </p>
+      {/* Meta */}
+      <div className="mt-4 sm:mt-6">
+        <div className="relative text-sm sm:text-base mt-1 sm:pr-32">
+          <h1 className="mb-1 text-base sm:text-2xl font-bold">
+            {video.title}
+          </h1>
+          <span className="font-medium text-text-500">{video.channel}</span>
+          <button className="mt-3 flex w-full items-center justify-center py-1.5 sm:text-sm sm:absolute sm:top-0 sm:right-0 sm:mt-0 sm:h-9 sm:w-24 text-sub-background bg-primary hover:bg-secondary cursor-pointer font-medium rounded-md transition duration-300 ease-in-out">
+            Save
+          </button>
         </div>
+
+        <div className="mt-3 text-xs sm:text-sm opacity-80">
+          <span>{video.viewCount.toLocaleString()} views</span>
+          <span className="mx-2">•</span>
+          <span>{video.publishedAt.toLocaleDateString()}</span>
+          <span className="mx-2">•</span>
+          <span>{Math.round(video.durationSec / 60)} min</span>
+        </div>
+
+        {/* Tags */}
+        {video.tags?.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-2">
+            {video.tags.map((t) => (
+              <span
+                key={t}
+                className="text-xs text-sub-background px-2 py-1 rounded-full border border-background bg-accent opacity-90"
+              >
+                {t}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Description */}
+        {video.description && (
+          <div className="mt-6 p-4 text-sm sm:text-base rounded-xl border border-text-600 whitespace-pre-line leading-relaxed">
+            {video.description}
+          </div>
+        )}
       </div>
     </div>
   );
