@@ -1,8 +1,5 @@
 import Filter from "./filter";
-
-type FilterState = {
-  selectedTags: string[];
-};
+import { FilterState } from "../ui/filter";
 
 export default function SideBar({
   value,

@@ -1,5 +1,19 @@
-type FilterState = {
-  selectedTags: string[];
+export type SortOption = "newest" | "most_viewed";
+export type LevelOption = "beginner" | "intermediate" | "advanced";
+export type TypeOption =
+  | "cardio"
+  | "strength"
+  | "hiit"
+  | "yoga"
+  | "stretching"
+  | "walking";
+export type DurationOption = "<20min" | "20-30min" | "30-45min" | "45+min";
+
+export type FilterState = {
+  sort: SortOption;
+  level?: LevelOption;
+  types: TypeOption[];
+  duration?: DurationOption;
 };
 
 type FilterProps = {
@@ -8,30 +22,81 @@ type FilterProps = {
 };
 
 export default function Filter({ value, onChange }: FilterProps) {
-  const toggleTag = (tag: string) => {
-    const isSelected = value.selectedTags.includes(tag);
-    const nextTags = isSelected
-      ? value.selectedTags.filter((t) => t !== tag)
-      : [...value.selectedTags, tag];
-    onChange({ selectedTags: nextTags });
+  const typeOptions: { label: string; value: TypeOption }[] = [
+    { label: "Cardio", value: "cardio" },
+    { label: "Strength", value: "strength" },
+    { label: "HIIT", value: "hiit" },
+    { label: "Yoga", value: "yoga" },
+    { label: "Stretching", value: "stretching" },
+    { label: "Walking", value: "walking" },
+  ];
+  const durationOptions: { label: string; value: DurationOption }[] = [
+    { label: "Under 20 min", value: "<20min" },
+    { label: "20-30 min", value: "20-30min" },
+    { label: "30-45 min", value: "30-45min" },
+    { label: "45+ min", value: "45+min" },
+  ];
+  const setSort = (sort: SortOption) => {
+    onChange({ ...value, sort });
   };
+
+  const toggleLevel = (level: LevelOption) => {
+    onChange({ ...value, level: value.level === level ? undefined : level });
+  };
+
+  const toggleType = (type: TypeOption) => {
+    const has = value.types.includes(type);
+    onChange({
+      ...value,
+      types: has
+        ? value.types.filter((t) => t !== type)
+        : [...value.types, type],
+    });
+  };
+
+  const toggleDuration = (duration: DurationOption) => {
+    onChange({
+      ...value,
+      duration: value.duration === duration ? undefined : duration,
+    });
+  };
+
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Filters</h2>
+      <div className="mb-4">
+        <h3 className="text-l font-bold mb-1">Sort By</h3>
+        <ul>
+          {[
+            { label: "Newest", value: "newest" },
+            { label: "Most Viewed", value: "most_viewed" },
+          ].map((sort) => (
+            <li
+              key={sort.value}
+              className={`select-none cursor-pointer px-2 rounded ${
+                value.sort === sort.value ? "bg-accent text-white" : ""
+              }`}
+              onClick={() => setSort(sort.value as SortOption)}
+            >
+              {sort.label}
+            </li>
+          ))}
+        </ul>
+      </div>
       <div className="mb-4">
         <h3 className="text-l font-bold mb-1">Level</h3>
         <ul>
           {["beginner", "intermediate", "advanced"].map((level) => (
             <li
               key={level}
-              className={`cursor-pointer ${
-                value.selectedTags.includes(level.toLowerCase())
-                  ? "font-bold"
+              className={`select-none cursor-pointer px-2 rounded ${
+                value.level === level.toLowerCase()
+                  ? "bg-accent text-white"
                   : ""
               }`}
-              onClick={() => toggleTag(level.toLowerCase())}
+              onClick={() => toggleLevel(level.toLowerCase() as LevelOption)}
             >
-              {level}
+              {level[0].toUpperCase() + level.slice(1)}
             </li>
           ))}
         </ul>
@@ -39,17 +104,15 @@ export default function Filter({ value, onChange }: FilterProps) {
       <div className="mb-4">
         <h3 className="text-l font-bold mb-1">Type</h3>
         <ul>
-          {["cardio", "strength", "flexibility", "hiit", "yoga"].map((type) => (
+          {typeOptions.map((type) => (
             <li
-              key={type}
-              className={`cursor-pointer ${
-                value.selectedTags.includes(type.toLowerCase())
-                  ? "font-bold"
-                  : ""
+              key={type.value}
+              className={`select-none cursor-pointer px-2 rounded ${
+                value.types.includes(type.value) ? "bg-accent text-white " : ""
               }`}
-              onClick={() => toggleTag(type.toLowerCase())}
+              onClick={() => toggleType(type.value)}
             >
-              {type}
+              {type.label}
             </li>
           ))}
         </ul>
@@ -57,41 +120,15 @@ export default function Filter({ value, onChange }: FilterProps) {
       <div className="mb-4">
         <h3 className="text-l font-bold mb-1">Duration</h3>
         <ul>
-          {["<20min", "20-30min", "30-60min", "60+min"].map((duration) => (
+          {durationOptions.map((duration) => (
             <li
-              key={duration}
-              className={`cursor-pointer ${
-                value.selectedTags.includes(duration.toLowerCase())
-                  ? "font-bold"
-                  : ""
+              key={duration.value}
+              className={`select-none cursor-pointer px-2 rounded ${
+                value.duration === duration.value ? "bg-accent text-white" : ""
               }`}
-              onClick={() => toggleTag(duration.toLowerCase())}
+              onClick={() => toggleDuration(duration.value)}
             >
-              {duration}
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="mb-4">
-        <h3 className="text-l font-bold mb-1">Equipment</h3>
-        <ul>
-          {[
-            "no-equipment",
-            "dumbbells",
-            "resistance-bands",
-            "kettlebells",
-            "barbell",
-          ].map((equip) => (
-            <li
-              key={equip}
-              className={`cursor-pointer ${
-                value.selectedTags.includes(equip.toLowerCase())
-                  ? "font-bold"
-                  : ""
-              }`}
-              onClick={() => toggleTag(equip.toLowerCase())}
-            >
-              {equip}
+              {duration.label}
             </li>
           ))}
         </ul>
