@@ -2,8 +2,13 @@ import { NextResponse } from "next/server";
 import { seedQueries } from "../../lib/seed-queries";
 import { parseIso8601DurationToSeconds } from "../../lib/video-utils";
 import { classifyTags } from "../../lib/classify";
-import fs from "node:fs/promises";
-import path from "node:path";
+
+import { PrismaClient } from "../../generated/prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
+
+const pool = new Pool({ connectionString: process.env.POSTGRES_URL });
+const prisma = new PrismaClient({ adapter: new PrismaPg(pool) });
 
 type CachedVideo = {
   youtubeId: string;
@@ -152,7 +157,6 @@ async function fetchVideoDetails(videoIds: string[], apiKey: string) {
   return results;
 }
 
-// The main handler for the GET request to this API route. It orchestrates the seeding process by calling the helper functions defined above.
 export async function GET() {
   try {
     const apiKey = assertApiKey();
@@ -173,16 +177,49 @@ export async function GET() {
     // 3) filter noise
     const cleaned = raw.filter((v) => !isNoisy(v));
 
-    // 4) save json cache
-    const outPath = path.join(process.cwd(), "app", "lib", "videos-cache.json");
-    await fs.writeFile(outPath, JSON.stringify(cleaned, null, 2), "utf-8");
+    // 4) upsert(update & insert) to DB
+    let upserted = 0;
+    for (const video of cleaned) {
+      const publishedDate = new Date(video.publishedAt);
+      if (Number.isNaN(publishedDate.getTime())) continue;
+
+      await prisma.video.upsert({
+        where: { youtubeId: video.youtubeId },
+        create: {
+          youtubeId: video.youtubeId,
+          title: video.title,
+          channel: video.channel,
+          viewCount: video.viewCount,
+          publishedAt: publishedDate,
+          durationSec: video.durationSec,
+          description: video.description,
+          thumbnail: video.thumbnail,
+          tags: video.tags,
+        },
+        update: {
+          title: video.title,
+          channel: video.channel,
+          viewCount: video.viewCount,
+          publishedAt: publishedDate,
+          durationSec: video.durationSec,
+          description: video.description,
+          thumbnail: video.thumbnail,
+          tags: video.tags,
+        },
+      });
+      upserted++;
+    }
+
+    // old way using local JSON file:
+    // const outPath = path.join(process.cwd(), "app", "lib", "videos-cache.json");
+    // await fs.writeFile(outPath, JSON.stringify(cleaned, null, 2), "utf-8");
 
     return NextResponse.json({
       ok: true,
       queries: seedQueries.length,
       idsCollected: ids.length,
       saved: cleaned.length,
-      cacheFile: "app/lib/videos-cache.json",
+      upserted,
     });
   } catch (err: any) {
     return NextResponse.json(

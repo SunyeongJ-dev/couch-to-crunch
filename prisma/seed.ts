@@ -1,3 +1,5 @@
+// This file is from Prisma docs and seeds the database with dummy data.
+// This app will be using api routes to add real data, so this is just for testing the database connection and schema.
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../app/generated/prisma/client";
 import "dotenv/config";
