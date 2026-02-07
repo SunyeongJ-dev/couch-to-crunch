@@ -1,14 +1,9 @@
+// app/api/seed/route.ts
 import { NextResponse } from "next/server";
 import { seedQueries } from "../../lib/seed-queries";
 import { parseIso8601DurationToSeconds } from "../../lib/video-utils";
 import { classifyTags } from "../../lib/classify";
-
-import { PrismaClient } from "../../generated/prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { Pool } from "pg";
-
-const pool = new Pool({ connectionString: process.env.POSTGRES_URL });
-const prisma = new PrismaClient({ adapter: new PrismaPg(pool) });
+import { prisma } from "../../lib/prisma";
 
 type CachedVideo = {
   youtubeId: string;
