@@ -40,3 +40,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 app/lib/videos-cache.json
+
+/app/generated/prisma
+
+.env*.local
