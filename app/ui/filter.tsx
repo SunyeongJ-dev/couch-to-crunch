@@ -1,13 +1,9 @@
-export type SortOption = "newest" | "most_viewed";
-export type LevelOption = "beginner" | "intermediate" | "advanced";
-export type TypeOption =
-  | "cardio"
-  | "strength"
-  | "hiit"
-  | "yoga"
-  | "stretching"
-  | "walking";
-export type DurationOption = "<20min" | "20-30min" | "30-45min" | "45+min";
+import type {
+  LevelOption,
+  TypeOption,
+  DurationOption,
+  SortOption,
+} from "../lib/types";
 
 export type FilterState = {
   sort: SortOption;
