@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useEffect } from "react";
+
 type VideoProps = {
   youtubeId: string;
   title: string;
@@ -12,7 +14,53 @@ type VideoProps = {
   tags: string[];
 };
 
+// This key is used to store the list of saved video IDs in local storage.
+const SAVED_VIDEOS_KEY = "saved_videos";
+
+// This function loads the list of saved video IDs from local storage. If there are no saved videos, it returns an empty array.
+function loadSavedVideos(): string[] {
+  if (typeof window === "undefined") return [];
+  const saved = localStorage.getItem(SAVED_VIDEOS_KEY);
+  return saved ? JSON.parse(saved) : [];
+}
+
+// This function saves a video ID to local storage by adding it to the existing list of saved video IDs.
+function saveVideoId(id: string) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(
+    SAVED_VIDEOS_KEY,
+    JSON.stringify([...loadSavedVideos(), id]),
+  );
+}
+
 export default function WatchClient({ video }: { video: VideoProps }) {
+  const [saved, setSaved] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+
+  // Check if the video is already saved when the component mounts.
+  useEffect(() => {
+    const ids = loadSavedVideos();
+    setSaved(ids.includes(video.youtubeId));
+  }, [video.youtubeId]);
+
+  // This function toggles the saved state of the video. If the video is currently saved, it removes it from local storage.
+  // If it's not saved, it adds it to local storage. The button text and state are updated accordingly.
+  function toggleSave() {
+    const ids = loadSavedVideos();
+    if (saved) {
+      const newIds = ids.filter((id) => id !== video.youtubeId);
+      localStorage.setItem(SAVED_VIDEOS_KEY, JSON.stringify(newIds));
+      setSaved(false);
+    } else {
+      saveVideoId(video.youtubeId);
+      setSaved(true);
+    }
+  }
+
+  const descriptionClass = expanded
+    ? "whitespace-pre-line"
+    : "whitespace-pre-line line-clamp-6";
+
   return (
     <div className="p-4 sm:p-8 max-w-5xl mx-auto bg-sub-background rounded-xl">
       {/* Player */}
@@ -33,8 +81,11 @@ export default function WatchClient({ video }: { video: VideoProps }) {
             {video.title}
           </h1>
           <span className="font-medium text-text-500">{video.channel}</span>
-          <button className="mt-3 flex w-full items-center justify-center py-1.5 sm:text-sm sm:absolute sm:top-0 sm:right-0 sm:mt-0 sm:h-9 sm:w-24 text-sub-background bg-primary hover:bg-secondary cursor-pointer font-medium rounded-md transition duration-300 ease-in-out">
-            Save
+          <button
+            onClick={toggleSave}
+            className="mt-3 flex w-full items-center justify-center py-1.5 sm:text-sm sm:absolute sm:top-0 sm:right-0 sm:mt-0 sm:h-9 sm:w-24 text-sub-background bg-primary hover:bg-secondary cursor-pointer font-medium rounded-md transition duration-300 ease-in-out"
+          >
+            {saved ? "Unsave" : "Save"}
           </button>
         </div>
 
@@ -62,10 +113,18 @@ export default function WatchClient({ video }: { video: VideoProps }) {
 
         {/* Description */}
         {video.description && (
-          <div className="mt-6 p-4 text-sm sm:text-base rounded-xl border border-text-600 whitespace-pre-line leading-relaxed">
-            {video.description}
+          <div className="mt-6 p-4 text-sm sm:text-base rounded-xl border border-text-600">
+            <p className={`leading-6 ${descriptionClass}`}>
+              {video.description}
+            </p>
           </div>
         )}
+        <button
+          onClick={() => setExpanded((e) => !e)}
+          className="mt-2 text-sm text-primary font-medium cursor-pointer"
+        >
+          {expanded ? "Show Less" : "Show More"}
+        </button>
       </div>
     </div>
   );
