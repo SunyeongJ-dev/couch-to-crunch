@@ -9,12 +9,13 @@ import { getDurationCategory } from "../lib/video-utils";
 import type { FetchedVideo } from "../lib/types";
 
 export default function Home() {
-  const [filters, setFilters] = React.useState<FilterState>({
+  const defaultFilters: FilterState = {
     sort: "newest",
     level: undefined,
     types: [],
     duration: undefined,
-  });
+  };
+  const [filters, setFilters] = React.useState<FilterState>(defaultFilters);
 
   // Local state for videos and loading status
   const [videos, setVideos] = React.useState<FetchedVideo[]>([]);
@@ -57,7 +58,11 @@ export default function Home() {
 
   return (
     <div className="min-h-screen pt-12 flex flex-col sm:flex-row sm:pt-0">
-      <SideBar value={filters} onChange={setFilters} />
+      <SideBar
+        value={filters}
+        onChange={setFilters}
+        onReset={() => setFilters(defaultFilters)}
+      />
       {loading ? (
         <div className="p-8">Loading videos...</div>
       ) : (
