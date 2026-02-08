@@ -28,12 +28,12 @@ export default function VideoCard({ video }: VideoCardProps) {
         </div>
         <div className="flex flex-col justify-between sm:min-h-36 p-4">
           <div>
-            <h3 className="text-lg font-semibold mb-2 line-clamp-2">
+            <h3 className="text-base md:text-lg font-semibold mb-1 line-clamp-2">
               {video.title}
             </h3>
-            <p className="text-text-600 text-sm">{video.channel}</p>
+            <p className="font-medium text-text-500 text-sm">{video.channel}</p>
           </div>
-          <div className="flex justify-between mt-auto">
+          <div className="mt-1 flex justify-between">
             <p className="text-text-500 text-xs mt-1">
               {formatViewCountShort(video.viewCount)} •{" "}
               {formatPublishedAgo(video.publishedAt)}

@@ -59,7 +59,7 @@ export default function Filter({ value, onChange }: FilterProps) {
 
   return (
     <div>
-      <h2 className="text-xl font-bold mb-4">Filters</h2>
+      <h2 className="text-xl font-bold mb-4 hidden sm:block">Filters</h2>
       <div className="mb-4">
         <h3 className="text-l font-bold mb-1">Sort By</h3>
         <ul>

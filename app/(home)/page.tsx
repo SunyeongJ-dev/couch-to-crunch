@@ -56,7 +56,7 @@ export default function Home() {
   });
 
   return (
-    <div className="h-screen flex">
+    <div className="min-h-screen pt-12 flex flex-col sm:flex-row sm:pt-0">
       <SideBar value={filters} onChange={setFilters} />
       {loading ? (
         <div className="p-8">Loading videos...</div>
