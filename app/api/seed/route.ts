@@ -43,8 +43,27 @@ function isNoisy(video: FetchedVideo): boolean {
     "compilation",
     "asmr",
     "music",
+    "review",
+    "transformation",
+    "prank",
+    "fail",
+    "funny",
+    "meme",
+    "how to",
+    "why",
+    "explained",
+    "science",
+    "research",
+    "podcast",
+    "interview",
+    "talk",
+    "lecture",
+    "discussion",
+    "lab",
+    "clips",
   ];
-  if (badWords.some((w) => text.includes(w))) return true;
+  const hasNoMusic = text.includes("no music");
+  if (!hasNoMusic && badWords.some((w) => text.includes(w))) return true;
 
   // too short
   if (video.durationSec > 0 && video.durationSec < 300) return true;
@@ -55,13 +74,19 @@ function isNoisy(video: FetchedVideo): boolean {
 }
 
 // Function to search for video IDs based on a query using the YouTube Search API
-async function searchVideoIds(query: string, apiKey: string, maxResults = 10) {
+async function searchVideoIds(
+  query: string,
+  apiKey: string,
+  duration: "medium" | "long",
+  maxResults = 5,
+) {
   const url = new URL(YT_SEARCH_URL);
   url.searchParams.set("part", "snippet");
   url.searchParams.set("q", query);
   url.searchParams.set("type", "video");
   url.searchParams.set("maxResults", String(maxResults));
   url.searchParams.set("videoEmbeddable", "true");
+  url.searchParams.set("videoDuration", duration);
   url.searchParams.set("safeSearch", "strict");
   url.searchParams.set("relevanceLanguage", "en");
   url.searchParams.set("regionCode", "CA");
@@ -141,16 +166,26 @@ async function fetchVideoDetails(videoIds: string[], apiKey: string) {
   return results;
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const apiKey = assertApiKey();
+
+    // Clear all videos in the database.
+    // const { searchParams } = new URL(req.url);
+    // const clear = searchParams.get("clear") === "1";
+    // if (clear) {
+    //   await prisma.video.deleteMany({});
+    // }
 
     // 1) collect ids
     const idSet = new Set<string>();
 
+    // For each predefined search query, we fetch video IDs for both "medium" and "long" duration videos.
     for (const q of seedQueries) {
-      const ids = await searchVideoIds(q, apiKey, 10);
-      ids.forEach((id) => idSet.add(id));
+      const mediumIds = await searchVideoIds(q, apiKey, "medium", 5);
+      const longIds = await searchVideoIds(q, apiKey, "long", 5);
+
+      [...mediumIds, ...longIds].forEach((id) => idSet.add(id));
     }
 
     const ids = Array.from(idSet);
@@ -193,10 +228,6 @@ export async function GET() {
       });
       upserted++;
     }
-
-    // old way using local JSON file:
-    // const outPath = path.join(process.cwd(), "app", "lib", "videos-cache.json");
-    // await fs.writeFile(outPath, JSON.stringify(cleaned, null, 2), "utf-8");
 
     return NextResponse.json({
       ok: true,

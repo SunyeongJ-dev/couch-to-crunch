@@ -8,12 +8,29 @@ export function classifyTags(title: string, description: string): string[] {
 
   // ---------- TYPE ----------
   const typeRules = {
-    cardio: ["cardio"],
-    hiit: ["hiit", "interval"],
-    strength: ["strength", "full body strength", "bodyweight", "dumbbell"],
-    yoga: ["yoga", "vinyasa", "flow"],
-    stretching: ["stretch", "stretching", "mobility", "flexibility"],
-    walking: ["walking workout", "walk at home", "indoor walking"],
+    cardio: ["cardio", "aerobic", "burn calories", "heart rate"],
+    hiit: ["hiit", "interval", "tabata", "circuit"],
+    strength: [
+      "strength",
+      "weight",
+      "muscle",
+      "dumbbell",
+      "kettlebell",
+      "resistance",
+      "upper body",
+      "lower body",
+      "abs",
+    ],
+    yoga: ["yoga", "vinyasa", "hatha", "yin yoga", "flow", "sun salutation"],
+    stretching: [
+      "stretch",
+      "stretching",
+      "mobility",
+      "flexibility",
+      "cool down",
+      "warm up",
+    ],
+    walking: ["walking", "walk at home", "indoor walk", "steps workout"],
   } as const;
 
   // We first check the title for type keywords, and if we don't find any, we check the description
@@ -33,9 +50,43 @@ export function classifyTags(title: string, description: string): string[] {
 
   // ---------- LEVEL ----------
   const levelRules = {
-    beginner: ["beginner", "for beginners", "easy", "low impact", "no jumping"],
-    intermediate: ["intermediate"],
-    advanced: ["advanced", "intense", "challenge"],
+    beginner: [
+      "beginner",
+      "easy",
+      "low impact",
+      "no jumping",
+      "for seniors",
+      "basic",
+      "level 1",
+      "starter",
+      "gentle",
+    ],
+    intermediate: [
+      "intermediate",
+      "burn",
+      "conditioning",
+      "level 2",
+      "toning",
+      "no rest",
+      "sweat",
+      "power",
+      "all levels",
+    ],
+    advanced: [
+      "advanced",
+      "insane",
+      "extreme",
+      "pro",
+      "athlete",
+      "shred",
+      "challenge",
+      "beast",
+      "hardcore",
+      "plyometrics",
+      "heavy",
+      "level 3",
+      "intense",
+    ],
   } as const;
 
   // We prioritize levels to ensure only one level tag is assigned, preferring beginner over intermediate, and intermediate over advanced

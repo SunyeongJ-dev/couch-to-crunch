@@ -1,31 +1,32 @@
 export const seedQueries = [
-  "home cardio workout",
-  "beginner cardio workout at home",
+  "cardio workout no equipment",
   "low impact cardio workout",
   "20 minute cardio workout",
+  "beginner cardio workout at home",
 
-  "hiit workout beginner",
-  "low impact hiit workout",
-  "hiit workout no jumping",
-  "20 minute hiit workout",
+  "tabata hiit workout",
+  "30 minute hiit workout",
 
   "full body strength workout at home",
-  "beginner strength workout",
+  "upper body strength workout",
+  "lower body strength workout",
   "bodyweight strength workout",
   "dumbbell strength workout at home",
+  "kettlebell strength training",
+
+  "total body conditioning routine",
+  "intermediate strength training at home",
+  "advanced full body workout",
 
   "yoga flow for beginners",
-  "20 minute yoga flow",
   "gentle yoga flow",
   "morning yoga routine",
+  "power yoga flow 60 minutes",
 
-  "morning stretch routine",
   "full body stretching routine",
   "mobility routine for beginners",
-  "10 minute stretch routine",
+  "bedtime stretching routine",
 
   "walking workout at home",
-  "walk at home workout",
-  "indoor walking workout",
-  "low impact walking workout",
+  "workout for seniors low impact",
 ];
