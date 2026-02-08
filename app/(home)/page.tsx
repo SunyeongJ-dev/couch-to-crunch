@@ -6,7 +6,7 @@ import VideoGrid from "../ui/video-grid";
 import SideBar from "../ui/sidebar";
 import { FilterState } from "../ui/filter";
 import { getDurationCategory } from "../lib/video-utils";
-import type { CachedVideo } from "../lib/types";
+import type { FetchedVideo } from "../lib/types";
 
 export default function Home() {
   const [filters, setFilters] = React.useState<FilterState>({
@@ -17,7 +17,7 @@ export default function Home() {
   });
 
   // Local state for videos and loading status
-  const [videos, setVideos] = React.useState<CachedVideo[]>([]);
+  const [videos, setVideos] = React.useState<FetchedVideo[]>([]);
   const [loading, setLoading] = React.useState(true);
 
   // Fetch videos from the database when the component mounts. The API route /api/videos returns the cached videos that were seeded using the /api/seed route.

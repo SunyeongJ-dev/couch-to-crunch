@@ -4,18 +4,7 @@ import { seedQueries } from "../../lib/seed-queries";
 import { parseIso8601DurationToSeconds } from "../../lib/video-utils";
 import { classifyTags } from "../../lib/classify";
 import { prisma } from "../../lib/prisma";
-
-type CachedVideo = {
-  youtubeId: string;
-  title: string;
-  channel: string;
-  viewCount: number;
-  publishedAt: string;
-  durationSec: number;
-  description: string;
-  thumbnail: string;
-  tags: string[];
-};
+import type { FetchedVideo } from "../../lib/types";
 
 // This API route is used to seed the videos cache by fetching data from the YouTube API.
 // It collects video IDs based on predefined search queries, fetches their details,
@@ -43,7 +32,7 @@ function isOlderThanYears(publishedAtIso: string, years: number): boolean {
 }
 
 // Heuristic function to filter out "noisy" videos that we don't want in our cache
-function isNoisy(video: CachedVideo): boolean {
+function isNoisy(video: FetchedVideo): boolean {
   const text = `${video.title} ${video.description}`.toLowerCase();
 
   // shorts/noise
@@ -99,8 +88,8 @@ async function fetchVideoDetails(videoIds: string[], apiKey: string) {
   for (let i = 0; i < videoIds.length; i += 50)
     chunks.push(videoIds.slice(i, i + 50));
 
-  const results: CachedVideo[] = [];
-  // For each chunk of video IDs, fetch their details and construct CachedVideo objects
+  const results: FetchedVideo[] = [];
+  // For each chunk of video IDs, fetch their details and construct FetchedVideo objects
   for (const chunk of chunks) {
     const url = new URL(YT_VIDEOS_URL);
     url.searchParams.set("part", "snippet,contentDetails,statistics");

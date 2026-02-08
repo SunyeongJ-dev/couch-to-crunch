@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { CachedVideo } from "../lib/types";
+import type { FetchedVideo } from "../lib/types";
 import Link from "next/link";
 import {
   formatDurationFromSeconds,
@@ -8,7 +8,7 @@ import {
 } from "../lib/video-utils";
 
 type VideoCardProps = {
-  video: CachedVideo;
+  video: FetchedVideo;
 };
 
 // The VideoCard component displays a single video's thumbnail, title, channel, view count, published date, and duration.

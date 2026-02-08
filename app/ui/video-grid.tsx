@@ -1,8 +1,8 @@
 import VideoCard from "./video-card";
-import type { CachedVideo } from "../lib/types";
+import type { FetchedVideo } from "../lib/types";
 
 type VideoGridProps = {
-  videos: CachedVideo[];
+  videos: FetchedVideo[];
 };
 
 // The VideoGrid component receives a list of videos and renders them in a responsive grid layout using the VideoCard component for each video.
