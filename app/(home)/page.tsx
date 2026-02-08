@@ -57,7 +57,7 @@ export default function Home() {
   });
 
   return (
-    <div className="min-h-screen pt-12 flex flex-col sm:flex-row sm:pt-0">
+    <div className="min-h-screen pt-12 flex flex-col items-start sm:flex-row sm:pt-0">
       <SideBar
         value={filters}
         onChange={setFilters}
