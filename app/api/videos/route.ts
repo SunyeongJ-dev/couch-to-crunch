@@ -2,8 +2,25 @@
 import { NextResponse } from "next/server";
 import { prisma } from "../../lib/prisma";
 
-export async function GET() {
+export async function GET(req: Request) {
+  // If the request includes an "ids" query parameter, we parse it to get a list of YouTube video IDs.
+  const url = new URL(req.url);
+  const idsParam = url.searchParams.get("ids");
+  const ids = idsParam
+    ? idsParam
+        .split(",")
+        .map((id) => id.trim())
+        .filter(Boolean)
+    : [];
+
   const rows = await prisma.video.findMany({
+    // If ids are provided, filter by those IDs; otherwise, return all videos.
+    where:
+      ids.length > 0
+        ? {
+            youtubeId: { in: ids },
+          }
+        : undefined,
     select: {
       youtubeId: true,
       title: true,
@@ -18,6 +35,7 @@ export async function GET() {
     orderBy: { publishedAt: "desc" },
   });
 
+  // We then map the database rows to a format suitable for the client, converting the publishedAt date to an ISO string.
   const data = rows.map((v) => ({
     youtubeId: v.youtubeId,
     title: v.title,

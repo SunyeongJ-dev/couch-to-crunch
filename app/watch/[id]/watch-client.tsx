@@ -18,7 +18,7 @@ type VideoProps = {
 const SAVED_VIDEOS_KEY = "saved_videos";
 
 // This function loads the list of saved video IDs from local storage. If there are no saved videos, it returns an empty array.
-function loadSavedVideos(): string[] {
+export function loadSavedVideos(): string[] {
   if (typeof window === "undefined") return [];
   const saved = localStorage.getItem(SAVED_VIDEOS_KEY);
   return saved ? JSON.parse(saved) : [];
