@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { FetchedVideo } from "../lib/types";
+import type { VideoData } from "../lib/types";
 import Link from "next/link";
 import {
   formatDurationFromSeconds,
@@ -8,7 +8,7 @@ import {
 } from "../lib/video-utils";
 
 type VideoCardProps = {
-  video: FetchedVideo;
+  video: VideoData;
 };
 
 // The VideoCard component displays a single video's thumbnail, title, channel, view count, published date, and duration.
@@ -28,10 +28,18 @@ export default function VideoCard({ video }: VideoCardProps) {
         </div>
         <div className="flex flex-col justify-between sm:min-h-36 p-4">
           <div>
-            <h3 className="text-base md:text-lg font-semibold mb-1 line-clamp-2">
+            <h3
+              className="text-base md:text-lg font-semibold mb-1 line-clamp-2"
+              title={video.title}
+            >
               {video.title}
             </h3>
-            <p className="font-medium text-text-500 text-sm">{video.channel}</p>
+            <p
+              className="font-medium text-text-500 text-sm"
+              title={video.channel}
+            >
+              {video.channel}
+            </p>
           </div>
           <div className="mt-1 flex justify-between">
             <p className="text-text-500 text-xs mt-1">

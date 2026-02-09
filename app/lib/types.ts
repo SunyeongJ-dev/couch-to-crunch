@@ -9,7 +9,7 @@ export type TypeOption =
   | "walking";
 export type DurationOption = "<20min" | "20-30min" | "30-45min" | "45+min";
 
-export type FetchedVideo = {
+export type VideoData = {
   youtubeId: string;
   title: string;
   channel: string;
