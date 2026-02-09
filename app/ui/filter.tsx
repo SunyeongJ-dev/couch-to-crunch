@@ -1,3 +1,4 @@
+// app/ui/filter.tsx
 import type {
   LevelOption,
   TypeOption,
@@ -18,6 +19,7 @@ type FilterProps = {
 };
 
 export default function Filter({ value, onChange }: FilterProps) {
+  // Label and value options for the filter UI.
   const typeOptions: { label: string; value: TypeOption }[] = [
     { label: "Cardio", value: "cardio" },
     { label: "Strength", value: "strength" },
@@ -32,14 +34,18 @@ export default function Filter({ value, onChange }: FilterProps) {
     { label: "30-45 min", value: "30-45min" },
     { label: "45+ min", value: "45+min" },
   ];
+
+  // When the sort option is changed, we update the filter state with the new sort value.
   const setSort = (sort: SortOption) => {
     onChange({ ...value, sort });
   };
 
+  // When a level option is toggled, we check if it's already selected. If it is, we deselect it by setting it to undefined.
   const toggleLevel = (level: LevelOption) => {
     onChange({ ...value, level: value.level === level ? undefined : level });
   };
 
+  // Variable has checks if the type is already included in the filter state.
   const toggleType = (type: TypeOption) => {
     const has = value.types.includes(type);
     onChange({
@@ -66,15 +72,15 @@ export default function Filter({ value, onChange }: FilterProps) {
           {[
             { label: "Newest", value: "newest" },
             { label: "Most Viewed", value: "most_viewed" },
-          ].map((sort) => (
+          ].map((option) => (
             <li
-              key={sort.value}
+              key={option.value}
               className={`select-none cursor-pointer px-2 rounded ${
-                value.sort === sort.value ? "bg-accent text-white" : ""
+                value.sort === option.value ? "bg-accent text-white" : ""
               }`}
-              onClick={() => setSort(sort.value as SortOption)}
+              onClick={() => setSort(option.value as SortOption)}
             >
-              {sort.label}
+              {option.label}
             </li>
           ))}
         </ul>
@@ -82,17 +88,17 @@ export default function Filter({ value, onChange }: FilterProps) {
       <div className="mb-4">
         <h3 className="text-l font-bold mb-1">Level</h3>
         <ul>
-          {["beginner", "intermediate", "advanced"].map((level) => (
+          {["beginner", "intermediate", "advanced"].map((option) => (
             <li
-              key={level}
+              key={option}
               className={`select-none cursor-pointer px-2 rounded ${
-                value.level === level.toLowerCase()
+                value.level === option.toLowerCase()
                   ? "bg-accent text-white"
                   : ""
               }`}
-              onClick={() => toggleLevel(level.toLowerCase() as LevelOption)}
+              onClick={() => toggleLevel(option.toLowerCase() as LevelOption)}
             >
-              {level[0].toUpperCase() + level.slice(1)}
+              {option[0].toUpperCase() + option.slice(1)}
             </li>
           ))}
         </ul>
@@ -100,15 +106,17 @@ export default function Filter({ value, onChange }: FilterProps) {
       <div className="mb-4">
         <h3 className="text-l font-bold mb-1">Type</h3>
         <ul>
-          {typeOptions.map((type) => (
+          {typeOptions.map((option) => (
             <li
-              key={type.value}
+              key={option.value}
               className={`select-none cursor-pointer px-2 rounded ${
-                value.types.includes(type.value) ? "bg-accent text-white " : ""
+                value.types.includes(option.value)
+                  ? "bg-accent text-white "
+                  : ""
               }`}
-              onClick={() => toggleType(type.value)}
+              onClick={() => toggleType(option.value)}
             >
-              {type.label}
+              {option.label}
             </li>
           ))}
         </ul>
@@ -116,15 +124,15 @@ export default function Filter({ value, onChange }: FilterProps) {
       <div className="mb-4">
         <h3 className="text-l font-bold mb-1">Duration</h3>
         <ul>
-          {durationOptions.map((duration) => (
+          {durationOptions.map((option) => (
             <li
-              key={duration.value}
+              key={option.value}
               className={`select-none cursor-pointer px-2 rounded ${
-                value.duration === duration.value ? "bg-accent text-white" : ""
+                value.duration === option.value ? "bg-accent text-white" : ""
               }`}
-              onClick={() => toggleDuration(duration.value)}
+              onClick={() => toggleDuration(option.value)}
             >
-              {duration.label}
+              {option.label}
             </li>
           ))}
         </ul>

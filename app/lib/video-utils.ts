@@ -1,9 +1,9 @@
+// app/lib/video-utils.ts
 import { DurationOption } from "../lib/types";
 
-// This file contains utility functions for working with video data, such as parsing durations, formatting view counts, and classifying videos into tags based on their title and description.
-// These functions are used across different parts of the app, including the API routes and the UI components.
+// This file is a module of utility functions related to video data processing and formatting.
 
-// Duration categories for filtering videos by length
+// Duration categories for filtering videos by length.
 export function getDurationCategory(seconds: number): DurationOption {
   if (seconds < 20 * 60) return "<20min";
   if (seconds < 30 * 60) return "20-30min";
@@ -12,6 +12,7 @@ export function getDurationCategory(seconds: number): DurationOption {
 }
 
 // YouTube API returns ISO 8601 duration format, e.g. PT1H2M3S
+// This function parses that format and converts it to total seconds.
 export function parseIso8601DurationToSeconds(iso: string): number {
   const m = iso.match(/^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
   if (!m) return 0;

@@ -6,10 +6,7 @@ import { classifyTags } from "../../lib/classify";
 import { prisma } from "../../lib/prisma";
 import type { VideoData } from "../../lib/types";
 
-// This API route is used to seed the videos cache by fetching data from the YouTube API.
-// It collects video IDs based on predefined search queries, fetches their details,
-// filters out noisy videos, and saves the cleaned data to a local JSON file.
-// This route is intended to be called manually (e.g. via curl) whenever we want to refresh the cache.
+// We use two endpoints: search to get video IDs, then videos to fetch full details for those IDs.
 const YT_SEARCH_URL = "https://www.googleapis.com/youtube/v3/search";
 const YT_VIDEOS_URL = "https://www.googleapis.com/youtube/v3/videos";
 
@@ -37,14 +34,14 @@ type VideosResponse = {
   }[];
 };
 
-// Helper function to ensure we have the YouTube API key available
+// Ensure we have a valid YouTube API key in .env.
 function assertApiKey(): string {
   const key = process.env.YOUTUBE_API_KEY;
   if (!key) throw new Error("Missing YOUTUBE_API_KEY in .env.local");
   return key;
 }
 
-// Utility function to determine if a video is older than a certain number of years
+// Determine if a video is older than a certain number of years.
 function isOlderThanYears(publishedAtIso: string, years: number): boolean {
   const d = new Date(publishedAtIso);
   if (Number.isNaN(d.getTime())) return false;
@@ -55,11 +52,11 @@ function isOlderThanYears(publishedAtIso: string, years: number): boolean {
   return d < cutoff;
 }
 
-// Heuristic function to filter out "noisy" videos that we don't want in our cache
+// Filter out videos that are likely to be "noisy" content.
 function isNoisy(video: VideoData): boolean {
   const text = `${video.title} ${video.description}`.toLowerCase();
 
-  // shorts/noise
+  // Avoid this keywords
   const badWords = [
     "#shorts",
     "shorts",
@@ -86,18 +83,21 @@ function isNoisy(video: VideoData): boolean {
     "lab",
     "clips",
   ];
+
+  // Prevent conflicting with bad words, we allow "no music" videos even if they contain the word "music".
   const hasNoMusic = text.includes("no music");
   if (!hasNoMusic && badWords.some((w) => text.includes(w))) return true;
 
-  // too short
+  // Longer than 5 minutes
   if (video.durationSec > 0 && video.durationSec < 300) return true;
-  // too old
+  // No older than 5 years
   if (isOlderThanYears(video.publishedAt, 5)) return true;
 
   return false;
 }
 
-// Function to search for video IDs based on a query using the YouTube Search API
+// Search video IDs for one query and one duration (medium or long).
+// Defaults to 5 results unless maxResults is provided.
 async function searchVideoIds(
   query: string,
   apiKey: string,
@@ -122,15 +122,19 @@ async function searchVideoIds(
     throw new Error(`search.list failed (${res.status}): ${text}`);
   }
 
+  // Parse JSON into the expected shape.
   const data = (await res.json()) as SearchResponse;
+  // Start from items (or empty array if missing).
   const ids: string[] = (data.items ?? [])
+    // Pull videoId from each item.
     .map((it) => it.id?.videoId)
+    // Remove empty/undefined and keep strings.
     .filter((id): id is string => Boolean(id));
 
   return ids;
 }
 
-// Function to fetch detailed information for a list of video IDs using the YouTube Videos API
+// Fetch video details.
 async function fetchVideoDetails(videoIds: string[], apiKey: string) {
   // YouTube videos.list max 50 ids per call
   const chunks: string[][] = [];
@@ -138,19 +142,19 @@ async function fetchVideoDetails(videoIds: string[], apiKey: string) {
     chunks.push(videoIds.slice(i, i + 50));
 
   const results: VideoData[] = [];
-  // For each chunk of video IDs, fetch their details and construct VideoData objects
+
   for (const chunk of chunks) {
     const url = new URL(YT_VIDEOS_URL);
     url.searchParams.set("part", "snippet,contentDetails,statistics");
     url.searchParams.set("id", chunk.join(","));
     url.searchParams.set("key", apiKey);
-    // We use cache: "no-store" to ensure we get fresh data from the YouTube API every time we run the seed script
+
     const res = await fetch(url.toString(), { cache: "no-store" });
     if (!res.ok) {
       const text = await res.text();
       throw new Error(`videos.list failed (${res.status}): ${text}`);
     }
-    // The YouTube API returns a lot of data, but we only extract the fields we care about for our cache
+
     const data = (await res.json()) as VideosResponse;
     for (const it of data.items ?? []) {
       const youtubeId = it.id as string;
@@ -201,10 +205,10 @@ export async function GET(req: Request) {
       await prisma.video.deleteMany({});
     }
 
-    // 1) collect ids
+    // Use a Set to avoid duplicate video IDs across queries and durations.
     const idSet = new Set<string>();
 
-    // For each predefined search query, we fetch video IDs for both "medium" and "long" duration videos.
+    // Start searching for video Ids.
     for (const q of seedQueries) {
       const mediumIds = await searchVideoIds(q, apiKey, "medium", 5);
       const longIds = await searchVideoIds(q, apiKey, "long", 5);
@@ -212,20 +216,22 @@ export async function GET(req: Request) {
       [...mediumIds, ...longIds].forEach((id) => idSet.add(id));
     }
 
+    // Convert the Set to an array.
     const ids = Array.from(idSet);
 
-    // 2) fetch details
+    // Fetch video details for the collected IDs.
     const raw = await fetchVideoDetails(ids, apiKey);
 
-    // 3) filter noise
+    // Apply noise filtering.
     const cleaned = raw.filter((v) => !isNoisy(v));
 
-    // 4) upsert(update & insert) to DB
-    let upserted = 0;
+    let upserted = 0; // For logging how many videos we upsert into the database.
     for (const video of cleaned) {
+      // Parse the publishedAt ISO string to date and skip if it's invalid.
       const publishedDate = new Date(video.publishedAt);
       if (Number.isNaN(publishedDate.getTime())) continue;
 
+      // Start update and insert (upsert) video data into the database.
       await prisma.video.upsert({
         where: { youtubeId: video.youtubeId },
         create: {

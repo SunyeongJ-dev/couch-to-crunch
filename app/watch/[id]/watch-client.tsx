@@ -1,7 +1,12 @@
+// app/watch/[id]/watch-client.tsx
+
+// "use client" is a directive that tells Next.js to treat this file as a client component,
+// allowing us to use React hooks and browser APIs like localStorage.
 "use client";
 
 import { useState } from "react";
 
+// This component uses its own type for props because publishedAt is a Date here (not a string).
 type VideoProps = {
   youtubeId: string;
   title: string;
@@ -14,10 +19,10 @@ type VideoProps = {
   tags: string[];
 };
 
-// This key is used to store the list of saved video IDs in local storage.
+// This key is used to store the list of saved video Ids in localStorage.
 const SAVED_VIDEOS_KEY = "saved_videos";
 
-// This function loads the list of saved video IDs from local storage. If there are no saved videos, it returns an empty array.
+// Loads saved video Ids from localStorage.
 export function loadSavedVideos(): string[] {
   if (typeof window === "undefined") return [];
   const saved = localStorage.getItem(SAVED_VIDEOS_KEY);
@@ -29,14 +34,15 @@ export default function WatchClient({ video }: { video: VideoProps }) {
   const [expanded, setExpanded] = useState(false);
   const saved = savedIds.includes(video.youtubeId);
 
-  // This function toggles the saved state of the video. If the video is currently saved, it removes it from local storage.
-  // If it's not saved, it adds it to local storage. The button text and state are updated accordingly.
+  // Toggles the saved state of the video.
   function toggleSave() {
     if (saved) {
+      // Creates a new array without the current video ID to avoid mutating state directly.
       const newIds = savedIds.filter((id) => id !== video.youtubeId);
       localStorage.setItem(SAVED_VIDEOS_KEY, JSON.stringify(newIds));
       setSavedIds(newIds);
     } else {
+      // Adds the Id to existing savedIds array.
       const newIds = [...savedIds, video.youtubeId];
       localStorage.setItem(SAVED_VIDEOS_KEY, JSON.stringify(newIds));
       setSavedIds(newIds);
@@ -67,6 +73,8 @@ export default function WatchClient({ video }: { video: VideoProps }) {
             {video.title}
           </h1>
           <span className="font-medium text-text-500">{video.channel}</span>
+
+          {/* Save Button */}
           <button
             onClick={toggleSave}
             className="mt-3 flex w-full items-center justify-center py-1.5 sm:text-sm sm:absolute sm:top-0 sm:right-0 sm:mt-0 sm:h-9 sm:w-24 text-sub-background bg-primary hover:bg-secondary cursor-pointer font-medium rounded-md transition duration-300 ease-in-out"
@@ -105,6 +113,8 @@ export default function WatchClient({ video }: { video: VideoProps }) {
             </p>
           </div>
         )}
+
+        {/* Show More Button */}
         <button
           onClick={() => setExpanded((e) => !e)}
           className="mt-2 text-sm text-primary font-medium cursor-pointer"

@@ -1,23 +1,22 @@
+// app/ui/video-card.tsx
 import Image from "next/image";
-import type { VideoData } from "../lib/types";
 import Link from "next/link";
 import {
   formatDurationFromSeconds,
   formatPublishedAgo,
   formatViewCountShort,
 } from "../lib/video-utils";
+import type { VideoData } from "../lib/types";
 
-type VideoCardProps = {
-  video: VideoData;
-};
-
-// The VideoCard component displays a single video's thumbnail, title, channel, view count, published date, and duration.
-// It is used in the VideoGrid component to render a grid of videos on the homepage.
-export default function VideoCard({ video }: VideoCardProps) {
+// The VideoCard component receives a single video object as a prop.
+export default function VideoCard({ video }: { video: VideoData }) {
   return (
+    // Next.js Link enables client-side navigation and prefetching.
+    // Client-side navigation means the app moves to another page without a full reload, creating a smoother user experience.
     <Link href={`/watch/${video.youtubeId}`} className="block">
       <div className="w-full bg-sub-background rounded-lg shadow-md overflow-hidden">
         <div className="relative pb-[56.25%]">
+          {/* Next.js Image optimizes size, loading, and format automatically. */}
           <Image
             src={video.thumbnail}
             alt={video.title}
@@ -43,6 +42,7 @@ export default function VideoCard({ video }: VideoCardProps) {
           </div>
           <div className="mt-1 flex justify-between">
             <p className="text-text-500 text-xs mt-1">
+              {/* format data for UI display using utility functions */}
               {formatViewCountShort(video.viewCount)} •{" "}
               {formatPublishedAgo(video.publishedAt)}
             </p>

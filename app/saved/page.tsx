@@ -1,13 +1,15 @@
+// app/saved/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
 import VideoGrid from "../ui/video-grid";
 import { loadSavedVideos } from "../watch/[id]/watch-client";
-import type { FetchedVideo } from "../lib/types";
+import type { VideoData } from "../lib/types";
 
 export default function SavedPage() {
+  // loadSavedVideos() is a function that gets the ids from localStorage.
   const [ids, setIds] = useState<string[]>(() => loadSavedVideos());
-  const [videos, setVideos] = useState<FetchedVideo[]>([]);
+  const [videos, setVideos] = useState<VideoData[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Whenever the list of saved video IDs changes, we need to fetch their details to display them.
@@ -19,10 +21,11 @@ export default function SavedPage() {
         setLoading(false);
         return;
       }
-      // Fetch the video details for the saved video IDs. The API route /api/videos accepts a comma-separated list of video IDs and returns their details.
+
       setLoading(true);
+      // Calls /api/videos GET route with ids query to fetch only videos with the specified IDs.
       const res = await fetch("/api/videos?ids=" + ids.join(","));
-      const data = (await res.json()) as FetchedVideo[];
+      const data = (await res.json()) as VideoData[];
       setVideos(data);
       setLoading(false);
     }
@@ -35,8 +38,8 @@ export default function SavedPage() {
       <h1 className="text-2xl font-bold mb-8">Saved Videos</h1>
       {loading ? (
         <p className="text-text-500">Loading saved videos...</p>
-      ) : videos.filter((video) => ids.includes(video.youtubeId)).length ===
-        0 ? (
+      ) : /* Defensive filter in case ids and videos get out of sync. */
+      videos.filter((video) => ids.includes(video.youtubeId)).length === 0 ? (
         <p className="text-text-500">No saved videos yet.</p>
       ) : (
         <VideoGrid

@@ -1,3 +1,4 @@
+// app/lib/types.ts
 export type SortOption = "newest" | "most_viewed";
 export type LevelOption = "beginner" | "intermediate" | "advanced";
 export type TypeOption =

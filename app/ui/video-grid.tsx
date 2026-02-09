@@ -1,13 +1,11 @@
+// app/ui/video-grid.tsx
 import VideoCard from "./video-card";
 import type { VideoData } from "../lib/types";
 
-type VideoGridProps = {
-  videos: VideoData[];
-};
-
-// The VideoGrid component receives a list of videos and renders them in a responsive grid layout using the VideoCard component for each video.
-export default function VideoGrid({ videos }: VideoGridProps) {
+// The VideoGrid component receives a list of sorted videos.
+export default function VideoGrid({ videos }: { videos: VideoData[] }) {
   const videoCards = videos.map((video) => (
+    // Render a VideoCard for each video in the list, passing the video data as a prop.
     <VideoCard key={video.youtubeId} video={video} />
   ));
   return (

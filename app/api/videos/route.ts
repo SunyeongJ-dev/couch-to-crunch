@@ -2,10 +2,14 @@
 import { NextResponse } from "next/server";
 import { prisma } from "../../lib/prisma";
 
+// Example request: /api/videos?ids=abc123,def456
 export async function GET(req: Request) {
-  // If the request includes an "ids" query parameter, we parse it to get a list of YouTube video IDs.
+  // Parse the request URL into a URL object.
+  // URL is a built-in Web API class which has searchParams.
   const url = new URL(req.url);
+  // Get the "ids" query param via url.searchParams.get().
   const idsParam = url.searchParams.get("ids");
+  // Split by comma, trim whitespace, and drop empty values.
   const ids = idsParam
     ? idsParam
         .split(",")
@@ -13,8 +17,8 @@ export async function GET(req: Request) {
         .filter(Boolean)
     : [];
 
+  // Find many videos, optionally filtered by the ids query.
   const rows = await prisma.video.findMany({
-    // If ids are provided, filter by those IDs; otherwise, return all videos.
     where:
       ids.length > 0
         ? {
@@ -35,7 +39,8 @@ export async function GET(req: Request) {
     orderBy: { publishedAt: "desc" },
   });
 
-  // We then map the database rows to a format suitable for the client, converting the publishedAt date to an ISO string.
+  // Map DB rows to a JSON-safe shape for the client.
+  // Dates are converted to ISO strings because JSON has no Date type.
   const data = rows.map((v) => ({
     youtubeId: v.youtubeId,
     title: v.title,
@@ -48,5 +53,6 @@ export async function GET(req: Request) {
     tags: v.tags,
   }));
 
+  // Return the data as JSON in the response.
   return NextResponse.json(data);
 }

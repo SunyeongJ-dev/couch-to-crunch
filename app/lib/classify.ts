@@ -1,6 +1,4 @@
-// This function takes a video's title and description and classifies it into tags based on keyword matching.
-// It looks for keywords related to workout type (e.g. "cardio", "yoga") and difficulty level (e.g. "beginner", "advanced").
-// The tags are used later for filtering and sorting videos in the UI.
+// app/lib/classify.ts
 
 type TypeTag =
   | "cardio"

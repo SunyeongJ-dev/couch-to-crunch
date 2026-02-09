@@ -1,3 +1,5 @@
+// app/ui/footer.tsx
+// Footer component will be displayed in login and signup pages.
 export default function Footer() {
   return (
     <footer className="w-full p-6 bg-sub-background border-t border-text-300">
