@@ -6,13 +6,9 @@ import { loadSavedVideos } from "../watch/[id]/watch-client";
 import type { FetchedVideo } from "../lib/types";
 
 export default function SavedPage() {
-  const [ids, setIds] = useState<string[]>([]);
+  const [ids, setIds] = useState<string[]>(() => loadSavedVideos());
   const [videos, setVideos] = useState<FetchedVideo[]>([]);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setIds(loadSavedVideos());
-  }, []);
 
   // Whenever the list of saved video IDs changes, we need to fetch their details to display them.
   useEffect(() => {

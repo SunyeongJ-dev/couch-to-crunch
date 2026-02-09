@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 type VideoProps = {
   youtubeId: string;
@@ -24,36 +24,22 @@ export function loadSavedVideos(): string[] {
   return saved ? JSON.parse(saved) : [];
 }
 
-// This function saves a video ID to local storage by adding it to the existing list of saved video IDs.
-function saveVideoId(id: string) {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(
-    SAVED_VIDEOS_KEY,
-    JSON.stringify([...loadSavedVideos(), id]),
-  );
-}
-
 export default function WatchClient({ video }: { video: VideoProps }) {
-  const [saved, setSaved] = useState(false);
+  const [savedIds, setSavedIds] = useState<string[]>(() => loadSavedVideos());
   const [expanded, setExpanded] = useState(false);
-
-  // Check if the video is already saved when the component mounts.
-  useEffect(() => {
-    const ids = loadSavedVideos();
-    setSaved(ids.includes(video.youtubeId));
-  }, [video.youtubeId]);
+  const saved = savedIds.includes(video.youtubeId);
 
   // This function toggles the saved state of the video. If the video is currently saved, it removes it from local storage.
   // If it's not saved, it adds it to local storage. The button text and state are updated accordingly.
   function toggleSave() {
-    const ids = loadSavedVideos();
     if (saved) {
-      const newIds = ids.filter((id) => id !== video.youtubeId);
+      const newIds = savedIds.filter((id) => id !== video.youtubeId);
       localStorage.setItem(SAVED_VIDEOS_KEY, JSON.stringify(newIds));
-      setSaved(false);
+      setSavedIds(newIds);
     } else {
-      saveVideoId(video.youtubeId);
-      setSaved(true);
+      const newIds = [...savedIds, video.youtubeId];
+      localStorage.setItem(SAVED_VIDEOS_KEY, JSON.stringify(newIds));
+      setSavedIds(newIds);
     }
   }
 

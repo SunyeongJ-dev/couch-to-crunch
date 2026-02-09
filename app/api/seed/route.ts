@@ -13,6 +13,30 @@ import type { FetchedVideo } from "../../lib/types";
 const YT_SEARCH_URL = "https://www.googleapis.com/youtube/v3/search";
 const YT_VIDEOS_URL = "https://www.googleapis.com/youtube/v3/videos";
 
+// Define types for the responses (res.json()) we get from the YouTube API.
+type SearchResponse = {
+  items?: { id?: { videoId?: string | null } | null }[];
+};
+
+type VideosResponse = {
+  items?: {
+    id?: string | null;
+    snippet?: {
+      title?: string;
+      channelTitle?: string;
+      description?: string;
+      publishedAt?: string;
+      thumbnails?: {
+        high?: { url?: string };
+        medium?: { url?: string };
+        default?: { url?: string };
+      };
+    };
+    contentDetails?: { duration?: string };
+    statistics?: { viewCount?: string | number };
+  }[];
+};
+
 // Helper function to ensure we have the YouTube API key available
 function assertApiKey(): string {
   const key = process.env.YOUTUBE_API_KEY;
@@ -98,10 +122,10 @@ async function searchVideoIds(
     throw new Error(`search.list failed (${res.status}): ${text}`);
   }
 
-  const data = await res.json();
+  const data = (await res.json()) as SearchResponse;
   const ids: string[] = (data.items ?? [])
-    .map((it: any) => it.id?.videoId)
-    .filter(Boolean);
+    .map((it) => it.id?.videoId)
+    .filter((id): id is string => Boolean(id));
 
   return ids;
 }
@@ -127,7 +151,7 @@ async function fetchVideoDetails(videoIds: string[], apiKey: string) {
       throw new Error(`videos.list failed (${res.status}): ${text}`);
     }
     // The YouTube API returns a lot of data, but we only extract the fields we care about for our cache
-    const data = await res.json();
+    const data = (await res.json()) as VideosResponse;
     for (const it of data.items ?? []) {
       const youtubeId = it.id as string;
 
@@ -171,11 +195,11 @@ export async function GET(req: Request) {
     const apiKey = assertApiKey();
 
     // Clear all videos in the database.
-    // const { searchParams } = new URL(req.url);
-    // const clear = searchParams.get("clear") === "1";
-    // if (clear) {
-    //   await prisma.video.deleteMany({});
-    // }
+    const { searchParams } = new URL(req.url);
+    const clear = searchParams.get("clear") === "1";
+    if (clear) {
+      await prisma.video.deleteMany({});
+    }
 
     // 1) collect ids
     const idSet = new Set<string>();
@@ -236,9 +260,9 @@ export async function GET(req: Request) {
       saved: cleaned.length,
       upserted,
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     return NextResponse.json(
-      { ok: false, error: err?.message ?? "Unknown error" },
+      { ok: false, error: (err as Error)?.message ?? "Unknown error" },
       { status: 500 },
     );
   }

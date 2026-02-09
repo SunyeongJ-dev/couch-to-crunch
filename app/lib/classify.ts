@@ -1,6 +1,16 @@
 // This function takes a video's title and description and classifies it into tags based on keyword matching.
 // It looks for keywords related to workout type (e.g. "cardio", "yoga") and difficulty level (e.g. "beginner", "advanced").
 // The tags are used later for filtering and sorting videos in the UI.
+
+type TypeTag =
+  | "cardio"
+  | "hiit"
+  | "strength"
+  | "yoga"
+  | "stretching"
+  | "walking";
+type LevelTag = "beginner" | "intermediate" | "advanced";
+
 export function classifyTags(title: string, description: string): string[] {
   const titleText = title.toLowerCase();
   const descText = description.toLowerCase();
@@ -33,19 +43,30 @@ export function classifyTags(title: string, description: string): string[] {
     walking: ["walking", "walk at home", "indoor walk", "steps workout"],
   } as const;
 
+  // Prioritize types (not tested yet due to quota limits)
+  const typePriority: (keyof typeof typeRules)[] = [
+    "walking",
+    "yoga",
+    "stretching",
+    "hiit",
+    "cardio",
+    "strength",
+  ];
+
   // We first check the title for type keywords, and if we don't find any, we check the description
-  (Object.keys(typeRules) as (keyof typeof typeRules)[]).forEach((type) => {
+  for (const type of typePriority) {
     if (typeRules[type].some((kw) => titleText.includes(kw))) {
       tags.push(type);
+      break;
     }
-  });
-
-  if (tags.length === 0) {
-    (Object.keys(typeRules) as (keyof typeof typeRules)[]).forEach((type) => {
+  }
+  if (!tags.some((t) => typePriority.includes(t as TypeTag))) {
+    for (const type of typePriority) {
       if (typeRules[type].some((kw) => descText.includes(kw))) {
         tags.push(type);
+        break;
       }
-    });
+    }
   }
 
   // ---------- LEVEL ----------
@@ -103,7 +124,7 @@ export function classifyTags(title: string, description: string): string[] {
       break;
     }
   }
-  if (!tags.some((t) => levelPriority.includes(t as any))) {
+  if (!tags.some((t) => levelPriority.includes(t as LevelTag))) {
     for (const lvl of levelPriority) {
       if (levelRules[lvl].some((kw) => descText.includes(kw))) {
         tags.push(lvl);
