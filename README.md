@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Couch to Crunch
 
-## Getting Started
+A focused workout video hub that pulls curated YouTube workouts, stores them in a Postgres database, and lets users filter, watch, and save favorites.
 
-First, run the development server:
+## MVP Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Browse a grid of workout videos with filters (sort, level, type, duration)
+- Watch page with embedded player, metadata, and tags
+- Save/unsave videos (localStorage)
+- Seed pipeline that fetches from YouTube and upserts into Postgres
+
+## Tech Stack
+
+- TypeScript
+- Next.js App Router + React
+- Tailwind CSS
+- Prisma + PostgreSQL
+
+## Environment Variables
+
+Create a `.env` file:
+
+```env
+POSTGRES_URL=YOUR_POSTGRES_URL
+DATABASE_URL=YOUR_PRISMA_DATABASE_URL
+YOUTUBE_API_KEY=YOUR_YOUTUBE_API_KEY
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+npm install
+npx prisma migrate dev
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open http://localhost:3000
 
-## Learn More
+## Seeding (YouTube -> DB)
 
-To learn more about Next.js, take a look at the following resources:
+```curl
+http://localhost:3000/api/seed
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `npm run dev` - start dev server
+- `npm run build` - production build
+- `npm run start` - run production server
+- `npm run lint` - lint
 
-## Deploy on Vercel
+## Notes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Saved videos are stored in localStorage.
+- The saved list is resolved via `GET /api/videos?ids=...`.
