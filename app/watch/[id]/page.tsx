@@ -2,8 +2,6 @@
 
 // notFound is a helper function from Next.js that triggers a 404 page when called.
 import { notFound } from "next/navigation";
-// Metadata is a type from Next.js that defines the structure of the metadata object.
-import type { Metadata } from "next";
 import { prisma } from "../../lib/prisma";
 import WatchClient from "./watch-client";
 
@@ -36,8 +34,14 @@ export default async function WatchPage({ params }: PageProps) {
 
   if (!video) notFound();
 
+  // Convert Date to string for safe serialization to the client component.
+  const clientVideo = {
+    ...video,
+    publishedAt: video.publishedAt.toISOString(),
+  };
+
   // We pass the video data to the WatchClient component after finding and fetching it.
-  return <WatchClient video={video} />;
+  return <WatchClient video={clientVideo} />;
 }
 
 // async function always returns a promise. We use async/await because we fetch data from the database.

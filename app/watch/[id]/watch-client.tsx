@@ -5,19 +5,7 @@
 "use client";
 
 import { useState } from "react";
-
-// This component uses its own type for props because publishedAt is a Date here (not a string).
-type VideoProps = {
-  youtubeId: string;
-  title: string;
-  channel: string;
-  viewCount: number;
-  publishedAt: Date;
-  durationSec: number;
-  description: string;
-  thumbnail: string;
-  tags: string[];
-};
+import type { VideoData } from "../../lib/types";
 
 // This key is used to store the list of saved video Ids in localStorage.
 const SAVED_VIDEOS_KEY = "saved_videos";
@@ -29,7 +17,7 @@ export function loadSavedVideos(): string[] {
   return saved ? JSON.parse(saved) : [];
 }
 
-export default function WatchClient({ video }: { video: VideoProps }) {
+export default function WatchClient({ video }: { video: VideoData }) {
   const [savedIds, setSavedIds] = useState<string[]>(() => loadSavedVideos());
   const [expanded, setExpanded] = useState(false);
   const saved = savedIds.includes(video.youtubeId);
@@ -86,7 +74,7 @@ export default function WatchClient({ video }: { video: VideoProps }) {
         <div className="mt-3 text-xs sm:text-sm opacity-80">
           <span>{video.viewCount.toLocaleString()} views</span>
           <span className="mx-2">•</span>
-          <span>{video.publishedAt.toLocaleDateString()}</span>
+          <span>{new Date(video.publishedAt).toLocaleDateString()}</span>
           <span className="mx-2">•</span>
           <span>{Math.round(video.durationSec / 60)} min</span>
         </div>
