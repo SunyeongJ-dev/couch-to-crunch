@@ -5,7 +5,18 @@
 "use client";
 
 import { useState } from "react";
-import type { VideoData } from "../../lib/types";
+
+// Define its own type for the props it receives.
+type WatchClientProps = {
+  youtubeId: string;
+  title: string;
+  channel: string;
+  description: string;
+  viewCount: number;
+  publishedAt: Date | string;
+  durationSec: number;
+  tags: string[];
+};
 
 // This key is used to store the list of saved video Ids in localStorage.
 const SAVED_VIDEOS_KEY = "saved_videos";
@@ -17,7 +28,7 @@ export function loadSavedVideos(): string[] {
   return saved ? JSON.parse(saved) : [];
 }
 
-export default function WatchClient({ video }: { video: VideoData }) {
+export default function WatchClient({ video }: { video: WatchClientProps }) {
   const [savedIds, setSavedIds] = useState<string[]>(() => loadSavedVideos());
   const [expanded, setExpanded] = useState(false);
   const saved = savedIds.includes(video.youtubeId);

@@ -7,14 +7,15 @@ import WatchClient from "./watch-client";
 
 // Define the type for the page props because we need to use it repeatedly.
 type PageProps = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 export async function generateMetadata({ params }: PageProps) {
+  const { id } = await params;
   // Prisma functions make us don't have to write raw SQL queries.
   // findUnique is a Prisma method that retrieves a single record from the database based on a unique id.
   const video = await prisma.video.findUnique({
-    where: { youtubeId: params.id },
+    where: { youtubeId: id },
     select: { title: true, channel: true },
     // This equals to the SQL query: SELECT title, channel FROM video WHERE youtubeId = params.id LIMIT 1;
   });
@@ -28,20 +29,15 @@ export async function generateMetadata({ params }: PageProps) {
 }
 
 export default async function WatchPage({ params }: PageProps) {
+  const { id } = await params;
   const video = await prisma.video.findUnique({
-    where: { youtubeId: params.id },
+    where: { youtubeId: id },
   });
 
   if (!video) notFound();
 
-  // Convert Date to string for safe serialization to the client component.
-  const clientVideo = {
-    ...video,
-    publishedAt: video.publishedAt.toISOString(),
-  };
-
   // We pass the video data to the WatchClient component after finding and fetching it.
-  return <WatchClient video={clientVideo} />;
+  return <WatchClient video={video} />;
 }
 
 // async function always returns a promise. We use async/await because we fetch data from the database.
