@@ -6,6 +6,7 @@ import { prisma } from "../../lib/prisma";
 import WatchClient from "./watch-client";
 
 // Define the type for the page props because we need to use it repeatedly.
+// In Next.js 16, the params from dynamic route should be Promise.
 type PageProps = {
   params: Promise<{ id: string }>;
 };
