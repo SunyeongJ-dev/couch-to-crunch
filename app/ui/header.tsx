@@ -27,7 +27,7 @@ export default function Header() {
             <li>
               <Link href="/saved">
                 <Image
-                  src="bookmark.svg"
+                  src="/bookmark.svg"
                   alt="Saved Workouts"
                   width={24}
                   height={24}
@@ -37,7 +37,7 @@ export default function Header() {
             <li>
               <Link href="">
                 <Image
-                  src="user.svg"
+                  src="/user.svg"
                   alt="User Profile"
                   width={24}
                   height={24}
