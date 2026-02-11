@@ -3,12 +3,11 @@
 
 import { useState, useEffect } from "react";
 import VideoGrid from "../ui/video-grid";
-import { loadSavedVideos } from "../watch/[id]/watch-client";
 import type { VideoData } from "../lib/types";
 
 export default function SavedPage() {
-  // loadSavedVideos() is a function that gets the ids from localStorage.
-  const [ids, setIds] = useState<string[]>(() => loadSavedVideos());
+  const savedIds = JSON.parse(localStorage.getItem("saved_videos") || "[]");
+  const [ids, setIds] = useState<string[]>(() => savedIds);
   const [videos, setVideos] = useState<VideoData[]>([]);
   const [loading, setLoading] = useState(true);
 
