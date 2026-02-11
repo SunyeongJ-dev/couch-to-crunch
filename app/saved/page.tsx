@@ -6,11 +6,14 @@ import VideoGrid from "../ui/video-grid";
 import type { VideoData } from "../lib/types";
 
 export default function SavedPage() {
-  const savedIds = JSON.parse(localStorage.getItem("saved_videos") || "[]");
-  const [ids, setIds] = useState<string[]>(() => savedIds);
+  const [ids, setIds] = useState<string[]>([]);
   const [videos, setVideos] = useState<VideoData[]>([]);
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const savedIds = JSON.parse(localStorage.getItem("saved_videos") || "[]");
+    setIds(savedIds);
+  }, []);
   // Whenever the list of saved video IDs changes, we need to fetch their details to display them.
   useEffect(() => {
     // If there are no saved video IDs, we can skip the fetch and just set loading to false.
