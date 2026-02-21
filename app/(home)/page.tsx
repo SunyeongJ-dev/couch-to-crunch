@@ -18,6 +18,8 @@ export default function Home() {
   };
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
 
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
   // Local state for videos and loading status
   const [videos, setVideos] = useState<VideoData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -62,12 +64,16 @@ export default function Home() {
   });
 
   return (
-    <div className="min-h-screen pt-12 flex flex-col items-start sm:flex-row sm:pt-0">
+    <div
+      className={`${isCollapsed ? "sm:pl-16" : "sm:pl-56"} min-h-screen pt-12 flex flex-col items-start sm:flex-row sm:pt-0`}
+    >
       {/* Pass the filter state and handlers to the SideBar component, which allows the user to update the filters. */}
       <SideBar
         value={filters}
         onChange={setFilters}
         onReset={() => setFilters(defaultFilters)}
+        isCollapsed={isCollapsed}
+        setIsCollapsed={setIsCollapsed}
       />
       {/* If the videos are still loading, we show a loading message. This will replace with a skeleton component in the future. */}
       {loading ? (

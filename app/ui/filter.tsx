@@ -16,9 +16,10 @@ export type FilterState = {
 type FilterProps = {
   value: FilterState;
   onChange: (next: FilterState) => void;
+  isCollapsed?: boolean;
 };
 
-export default function Filter({ value, onChange }: FilterProps) {
+export default function Filter({ value, onChange, isCollapsed }: FilterProps) {
   // Label and value options for the filter UI.
   const typeOptions: { label: string; value: TypeOption }[] = [
     { label: "Cardio", value: "cardio" },
@@ -64,11 +65,15 @@ export default function Filter({ value, onChange }: FilterProps) {
   };
 
   return (
-    <div>
-      <h2 className="text-xl font-bold mb-4 hidden sm:block">Filters</h2>
-      <div className="mb-4">
+    <div
+      className={`transition-all duration-300 transform ${isCollapsed ? "opacity-0" : "opacity-100"}`}
+    >
+      <h2 className="text-xl font-bold mb-4 hidden sm:block whitespace-nowrap">
+        Filters
+      </h2>
+      <div className="mb-4 whitespace-nowrap">
         <h3 className="text-l font-bold mb-1">Sort By</h3>
-        <ul>
+        <ul className="flex flex-col gap-0.5">
           {[
             { label: "Newest", value: "newest" },
             { label: "Most Viewed", value: "most_viewed" },
@@ -85,9 +90,9 @@ export default function Filter({ value, onChange }: FilterProps) {
           ))}
         </ul>
       </div>
-      <div className="mb-4">
+      <div className="mb-4 whitespace-nowrap">
         <h3 className="text-l font-bold mb-1">Level</h3>
-        <ul>
+        <ul className="flex flex-col gap-0.5">
           {["beginner", "intermediate", "advanced"].map((option) => (
             <li
               key={option}
@@ -103,9 +108,9 @@ export default function Filter({ value, onChange }: FilterProps) {
           ))}
         </ul>
       </div>
-      <div className="mb-4">
+      <div className="mb-4 whitespace-nowrap">
         <h3 className="text-l font-bold mb-1">Type</h3>
-        <ul>
+        <ul className="flex flex-col gap-0.5">
           {typeOptions.map((option) => (
             <li
               key={option.value}
@@ -121,9 +126,9 @@ export default function Filter({ value, onChange }: FilterProps) {
           ))}
         </ul>
       </div>
-      <div className="mb-4">
+      <div className="mb-4 whitespace-nowrap">
         <h3 className="text-l font-bold mb-1">Duration</h3>
-        <ul>
+        <ul className="flex flex-col gap-0.5">
           {durationOptions.map((option) => (
             <li
               key={option.value}
