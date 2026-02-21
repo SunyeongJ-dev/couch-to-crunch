@@ -2,11 +2,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import VideoGrid from "../ui/video-grid";
-import SideBar from "../ui/sidebar";
-import { getDurationCategory } from "../lib/video-utils";
-import type { FilterState } from "../ui/filter";
-import type { VideoData } from "../lib/types";
+import VideoGrid from "./ui/video-grid";
+import SideBar from "./ui/sidebar";
+import { getDurationCategory } from "./lib/video-utils";
+import type { FilterState } from "./ui/filter";
+import type { VideoData } from "./lib/types";
 
 export default function Home() {
   // Local state for filters with default values.
