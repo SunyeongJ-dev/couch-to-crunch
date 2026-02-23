@@ -16,15 +16,21 @@ export async function GET(req: Request) {
         .map((id) => id.trim())
         .filter(Boolean)
     : [];
+  // Get the "q" query param for searching by title.
+  const q = url.searchParams.get("q");
+
+  // Conditionally build the "where" clause based on the presence of query or ids params.
+  const where: any = {};
+  if (q) {
+    where.title = { contains: q, mode: "insensitive" };
+  }
+  if (ids.length > 0) {
+    where.youtubeId = { in: ids };
+  }
 
   // Find many videos, optionally filtered by the ids query.
   const rows = await prisma.video.findMany({
-    where:
-      ids.length > 0
-        ? {
-            youtubeId: { in: ids },
-          }
-        : undefined,
+    where: Object.keys(where).length > 0 ? where : undefined,
     select: {
       youtubeId: true,
       title: true,

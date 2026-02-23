@@ -41,7 +41,10 @@ export default function SearchBar({
       />
       <button
         className="flex mb-1.5 cursor-pointer justify-center items-center"
-        onClick={() => setIsCompact(true)}
+        onClick={() => {
+          setIsCompact(true);
+          setSearchWord("");
+        }}
         aria-label="Close search"
       >
         <Image src="/x.svg" alt="Close search" width={24} height={24} />
