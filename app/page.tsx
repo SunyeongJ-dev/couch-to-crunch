@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import VideoGrid from "./ui/video-grid";
 import SideBar from "./ui/sidebar";
-import SearchBar from "./ui/searchBar";
+import SearchBar from "./ui/searchbar";
 import { getDurationCategory } from "./lib/video-utils";
 import type { FilterState } from "./ui/filter";
 import type { VideoData } from "./lib/types";

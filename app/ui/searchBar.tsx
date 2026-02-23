@@ -1,4 +1,5 @@
 import Image from "next/image";
+
 type SearchProps = {
   searchWord: string;
   setSearchWord: (newValue: string) => void;
