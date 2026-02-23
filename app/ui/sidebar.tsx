@@ -49,7 +49,7 @@ export default function SideBar({
 
       {/* This is the sidebar for larger screens. */}
       <aside
-        className={`hidden sm:block fixed left-0 top-16 bottom-0 z-50 bg-sub-background border-r border-text-300 overflow-y-auto transition-all duration-300 transform 
+        className={`hidden overflow-x-hidden sm:block fixed left-0 top-16 bottom-0 z-50 bg-sub-background border-r border-text-300 overflow-y-auto transition-all duration-300 transform 
           ${isCollapsed ? "w-16" : "w-56"} px-0 py-6`}
       >
         <button
