@@ -3,6 +3,7 @@ import NextAuth, { DefaultSession } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import type { Session } from "next-auth";
 import type { JWT } from "next-auth/jwt";
+import { prisma } from "@/app/lib/prisma";
 
 // Declare an extension of the DefaultSession to include a user id sub.
 // sub is not an email address. It's a specific string for each user.

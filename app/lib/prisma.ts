@@ -1,7 +1,7 @@
 // app/lib/prisma.ts
 
 // Prisma client helps with safe DB queries and hints while typing.
-import { PrismaClient } from "../generated/prisma/client";
+import { PrismaClient } from "@prisma/client";
 // Prisma adapter to use a shared Postgres pool.
 import { PrismaPg } from "@prisma/adapter-pg";
 // Postgres connection pool (reuses connections).

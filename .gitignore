@@ -44,3 +44,4 @@ app/lib/videos-cache.json
 /app/generated/prisma
 
 .env*.local
+app/generate-secret.js
