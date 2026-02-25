@@ -1,8 +1,11 @@
+// app/api/auth/[...nextauth]/route.ts
 import NextAuth, { DefaultSession } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import type { Session } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 
+// Declare an extension of the DefaultSession to include a user id sub.
+// sub is not an email address. It's a specific string for each user.
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user?: {
@@ -11,6 +14,7 @@ declare module "next-auth" {
   }
 }
 
+// Object that contains the configuration for NextAuth.
 export const authOptions = {
   providers: [
     GoogleProvider({
