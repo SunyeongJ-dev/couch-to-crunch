@@ -32,7 +32,7 @@ model Video {
 }
 
 model User {
-  id String @id @default(cuid())
+  id String @id @unique
   email String @unique
   name String?
   image String?

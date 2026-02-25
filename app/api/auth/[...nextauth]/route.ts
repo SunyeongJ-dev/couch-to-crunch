@@ -33,6 +33,23 @@ export const authOptions = {
       }
       return session;
     },
+    async signIn({ user }: any) {
+      await prisma.user.upsert({
+        where: { id: user.id },
+        update: {
+          email: user.email,
+          name: user.name!,
+          image: user.image!,
+        },
+        create: {
+          id: user.id,
+          email: user.email,
+          name: user.name!,
+          image: user.image!,
+        },
+      });
+      return true;
+    },
   },
 };
 
