@@ -26,7 +26,7 @@ export default function SavedPage() {
     }
 
     load();
-  }, [videoIds, isReady]);
+  }, [videoIds]);
 
   if (!isReady) {
     return (
