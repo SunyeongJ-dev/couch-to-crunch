@@ -16,9 +16,9 @@ export async function generateMetadata({ params }: PageProps) {
   // Prisma functions make us don't have to write raw SQL queries.
   // findUnique is a Prisma method that retrieves a single record from the database based on a unique id.
   const video = await prisma.video.findUnique({
-    where: { youtubeId: id },
+    where: { id: id },
     select: { title: true, channel: true },
-    // This equals to the SQL query: SELECT title, channel FROM video WHERE youtubeId = params.id LIMIT 1;
+    // This equals to the SQL query: SELECT title, channel FROM video WHERE id = params.id LIMIT 1;
   });
 
   if (!video) return { title: "Video not found" };
@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: PageProps) {
 export default async function WatchPage({ params }: PageProps) {
   const { id } = await params;
   const video = await prisma.video.findUnique({
-    where: { youtubeId: id },
+    where: { id: id },
   });
 
   if (!video) notFound();

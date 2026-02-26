@@ -33,6 +33,15 @@ export default function Header() {
     };
   }, [isModalOpen]);
 
+  useEffect(() => {
+    if (session?.user) {
+      const videosInLocal = JSON.parse(
+        localStorage.getItem("saved_videos") || "[]",
+      );
+      localStorage.removeItem("saved_videos");
+    }
+  }, [session]);
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-16 w-full px-8 bg-sub-background border-b border-text-300">
       <div className="flex h-full justify-between items-center gap-5">

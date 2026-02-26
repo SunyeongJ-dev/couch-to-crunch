@@ -157,7 +157,7 @@ async function fetchVideoDetails(videoIds: string[], apiKey: string) {
 
     const data = (await res.json()) as VideosResponse;
     for (const it of data.items ?? []) {
-      const youtubeId = it.id as string;
+      const id = it.id as string;
 
       const title = it.snippet?.title ?? "";
       const channel = it.snippet?.channelTitle ?? "";
@@ -178,7 +178,7 @@ async function fetchVideoDetails(videoIds: string[], apiKey: string) {
       const tags = classifyTags(title, description);
 
       results.push({
-        youtubeId,
+        id,
         title,
         channel,
         viewCount,
@@ -233,9 +233,9 @@ export async function GET(req: Request) {
 
       // Start update and insert (upsert) video data into the database.
       await prisma.video.upsert({
-        where: { youtubeId: video.youtubeId },
+        where: { id: video.id },
         create: {
-          youtubeId: video.youtubeId,
+          id: video.id,
           title: video.title,
           channel: video.channel,
           viewCount: video.viewCount,

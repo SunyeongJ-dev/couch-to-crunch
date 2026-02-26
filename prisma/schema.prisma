@@ -13,8 +13,7 @@ datasource db {
 }
 
 model Video {
-  id          String   @id @default(cuid())
-  youtubeId   String   @unique
+  id   String   @id @unique
 
   title       String
   channel     String
@@ -34,8 +33,8 @@ model Video {
 model User {
   id String @id @unique
   email String @unique
-  name String?
-  image String?
+  name String? @default("Unknown")
+  image String? @default("Unknown")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   savedVideos UserSavedVideo[]
@@ -46,7 +45,8 @@ model UserSavedVideo {
   userId String
   videoId String
   createdAt DateTime @default(now())
-  user User @relation(fields: [userId], references: [id])
-  video Video @relation(fields: [videoId], references: [youtubeId])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  video Video @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  @@unique([userId, videoId])
 }
 

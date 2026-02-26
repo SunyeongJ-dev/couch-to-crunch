@@ -11,7 +11,7 @@ export type TypeOption =
 export type DurationOption = "<20min" | "20-30min" | "30-45min" | "45+min";
 
 export type VideoData = {
-  youtubeId: string;
+  id: string;
   title: string;
   channel: string;
   viewCount: number;

@@ -1,6 +1,6 @@
 // app/api/videos/route.ts
 import { NextResponse } from "next/server";
-import { prisma } from "../../lib/prisma";
+import { prisma } from "@/app/lib/prisma";
 
 // Example request: /api/videos?ids=abc123,def456
 export async function GET(req: Request) {
@@ -25,14 +25,14 @@ export async function GET(req: Request) {
     where.title = { contains: q, mode: "insensitive" };
   }
   if (ids.length > 0) {
-    where.youtubeId = { in: ids };
+    where.id = { in: ids };
   }
 
   // Find many videos, optionally filtered by the ids query.
   const rows = await prisma.video.findMany({
     where: Object.keys(where).length > 0 ? where : undefined,
     select: {
-      youtubeId: true,
+      id: true,
       title: true,
       channel: true,
       viewCount: true,
@@ -48,7 +48,7 @@ export async function GET(req: Request) {
   // Map DB rows to a JSON-safe shape for the client.
   // Dates are converted to ISO strings because JSON has no Date type.
   const data = rows.map((v) => ({
-    youtubeId: v.youtubeId,
+    id: v.id,
     title: v.title,
     channel: v.channel,
     viewCount: v.viewCount,

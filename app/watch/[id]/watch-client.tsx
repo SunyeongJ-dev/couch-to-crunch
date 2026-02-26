@@ -8,7 +8,7 @@ import { useState } from "react";
 
 // Define its own type for the props it receives.
 type WatchClientProps = {
-  youtubeId: string;
+  id: string;
   title: string;
   channel: string;
   description: string;
@@ -31,18 +31,18 @@ export function loadSavedVideos(): string[] {
 export default function WatchClient({ video }: { video: WatchClientProps }) {
   const [savedIds, setSavedIds] = useState<string[]>(() => loadSavedVideos());
   const [expanded, setExpanded] = useState(false);
-  const saved = savedIds.includes(video.youtubeId);
+  const saved = savedIds.includes(video.id);
 
   // Toggles the saved state of the video.
   function toggleSave() {
     if (saved) {
       // Creates a new array without the current video ID to avoid mutating state directly.
-      const newIds = savedIds.filter((id) => id !== video.youtubeId);
+      const newIds = savedIds.filter((id) => id !== video.id);
       localStorage.setItem(SAVED_VIDEOS_KEY, JSON.stringify(newIds));
       setSavedIds(newIds);
     } else {
       // Adds the Id to existing savedIds array.
-      const newIds = [...savedIds, video.youtubeId];
+      const newIds = [...savedIds, video.id];
       localStorage.setItem(SAVED_VIDEOS_KEY, JSON.stringify(newIds));
       setSavedIds(newIds);
     }
@@ -58,7 +58,7 @@ export default function WatchClient({ video }: { video: WatchClientProps }) {
       <div className="w-full aspect-video rounded-xl overflow-hidden bg-black">
         <iframe
           className="w-full h-full"
-          src={`https://www.youtube.com/embed/${video.youtubeId}`}
+          src={`https://www.youtube.com/embed/${video.id}`}
           title={video.title}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen

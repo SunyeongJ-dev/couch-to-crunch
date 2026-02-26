@@ -1,7 +1,5 @@
-// This file is from Prisma docs and seeds the database with dummy data.
-// This app will be using api routes to add real data, so this is just for testing the database connection and schema.
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../app/generated/prisma/client";
+import { PrismaClient } from "@prisma/client";
 import "dotenv/config";
 
 const connectionString = process.env["POSTGRES_URL"];
@@ -13,45 +11,66 @@ if (!connectionString) {
 const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
-async function main() {
-  console.log("Seeding database with dummy data...");
+// async function main() {
+//   console.log("Seeding database with dummy data...");
 
-  await prisma.video.createMany({
-    data: [
-      {
-        youtubeId: "dummy-video-1",
-        title: "Dummy Cardio Workout",
-        channel: "Couch to Crunch",
-        viewCount: 0,
-        publishedAt: new Date(),
-        durationSec: 600,
-        description: "This is a dummy video seeded via Prisma.",
-        thumbnail: "https://placehold.co/600x400",
-        tags: ["cardio", "beginner"],
-      },
-      {
-        youtubeId: "dummy-video-2",
-        title: "Dummy Stretch Routine",
-        channel: "Couch to Crunch",
-        viewCount: 0,
-        publishedAt: new Date(),
-        durationSec: 480,
-        description: "Another dummy video for testing.",
-        thumbnail: "https://placehold.co/600x400",
-        tags: ["stretch", "mobility"],
-      },
-    ],
-    skipDuplicates: true,
-  });
+//   await prisma.video.createMany({
+//     data: [
+//       {
+//         youtubeId: "dummy-video-1",
+//         title: "Dummy Cardio Workout",
+//         channel: "Couch to Crunch",
+//         viewCount: 0,
+//         publishedAt: new Date(),
+//         durationSec: 600,
+//         description: "This is a dummy video seeded via Prisma.",
+//         thumbnail: "https://placehold.co/600x400",
+//         tags: ["cardio", "beginner"],
+//       },
+//       {
+//         youtubeId: "dummy-video-2",
+//         title: "Dummy Stretch Routine",
+//         channel: "Couch to Crunch",
+//         viewCount: 0,
+//         publishedAt: new Date(),
+//         durationSec: 480,
+//         description: "Another dummy video for testing.",
+//         thumbnail: "https://placehold.co/600x400",
+//         tags: ["stretch", "mobility"],
+//       },
+//     ],
+//     skipDuplicates: true,
+//   });
 
-  console.log("Dummy seed complete");
+//   console.log("Dummy seed complete");
+// }
+
+// main()
+//   .catch((e) => {
+//     console.error("Seed failed", e);
+//     process.exit(1);
+//   })
+//   .finally(async () => {
+//     await prisma.$disconnect();
+//   });
+
+// Convert video.youtubeId to video.id for all existing videos in the database
+async function migrateVideoIds() {
+  const videos = await prisma.video.findMany();
+  for (const video of videos) {
+    await prisma.video.update({
+      where: { id: video.id },
+      data: { id: video.youtubeId },
+    });
+  }
 }
 
-main()
-  .catch((e) => {
-    console.error("Seed failed", e);
-    process.exit(1);
+migrateVideoIds()
+  .then(() => {
+    console.log("Migration complete");
+    prisma.$disconnect();
   })
-  .finally(async () => {
-    await prisma.$disconnect();
+  .catch((e) => {
+    console.error(e);
+    prisma.$disconnect();
   });

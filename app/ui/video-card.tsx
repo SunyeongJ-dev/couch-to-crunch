@@ -13,7 +13,7 @@ export default function VideoCard({ video }: { video: VideoData }) {
   return (
     // Next.js Link enables client-side navigation and prefetching.
     // Client-side navigation means the app moves to another page without a full reload, creating a smoother user experience.
-    <Link href={`/watch/${video.youtubeId}`} className="block">
+    <Link href={`/watch/${video.id}`} className="block">
       <div className="w-full bg-sub-background rounded-lg shadow-md overflow-hidden">
         <div className="relative pb-[56.25%]">
           {/* Next.js Image optimizes size, loading, and format automatically. */}

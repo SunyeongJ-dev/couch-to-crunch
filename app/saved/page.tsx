@@ -41,12 +41,10 @@ export default function SavedPage() {
       {loading ? (
         <p className="text-text-500">Loading saved videos...</p>
       ) : /* Defensive filter in case ids and videos get out of sync. */
-      videos.filter((video) => ids.includes(video.youtubeId)).length === 0 ? (
+      videos.filter((video) => ids.includes(video.id)).length === 0 ? (
         <p className="text-text-500">No saved videos yet.</p>
       ) : (
-        <VideoGrid
-          videos={videos.filter((video) => ids.includes(video.youtubeId))}
-        />
+        <VideoGrid videos={videos.filter((video) => ids.includes(video.id))} />
       )}
     </div>
   );
