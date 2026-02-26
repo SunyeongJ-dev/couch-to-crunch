@@ -1,7 +1,7 @@
 // app/(home)/page.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import VideoGrid from "./ui/video-grid";
 import SideBar from "./ui/sidebar";
 import SearchBar from "./ui/searchbar";
@@ -19,7 +19,9 @@ export default function Home() {
   };
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
 
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState<boolean | undefined>(
+    undefined,
+  );
 
   // Local state for videos and loading status
   const [fetchedVideos, setFetchedVideos] = useState<VideoData[]>([]);
@@ -53,6 +55,21 @@ export default function Home() {
     }, 300);
     return () => clearTimeout(searchHandler);
   }, [searchWord]);
+
+  useEffect(() => {
+    const savedSidebarState = localStorage.getItem("isSidebarCollapsed");
+    if (savedSidebarState !== null) {
+      setIsCollapsed(savedSidebarState === "true");
+    } else {
+      setIsCollapsed(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isCollapsed !== undefined) {
+      localStorage.setItem("isSidebarCollapsed", isCollapsed.toString());
+    }
+  }, [isCollapsed]);
 
   // We apply the filters to the list of videos.
   // This includes filtering by level, type, and duration, as well as sorting by either newest or most viewed.

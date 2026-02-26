@@ -22,8 +22,8 @@ export default function SideBar({
   onChange: (next: FilterState) => void;
   // This indicates that onReset should be a function that takes no arguments and returns void.
   onReset: () => void;
-  isCollapsed: boolean;
-  setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
+  isCollapsed: boolean | undefined;
+  setIsCollapsed: React.Dispatch<React.SetStateAction<boolean | undefined>>;
 }) {
   return (
     <>
