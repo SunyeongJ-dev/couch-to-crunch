@@ -5,14 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useState, useRef, useEffect } from "react";
-import useSavedVideo from "@/app/lib/useSavedVideo";
 
 export default function Header() {
   const { data: session } = useSession();
   const [isModalOpen, setIsModalOpen] = useState(false);
   // useRef is used to reference a DOM element, in this case, the modal.
   const modalRef = useRef<HTMLDivElement>(null);
-  const { videoIds, isReady } = useSavedVideo("");
 
   useEffect(() => {
     if (!isModalOpen) return;
