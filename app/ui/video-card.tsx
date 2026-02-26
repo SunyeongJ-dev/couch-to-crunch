@@ -7,14 +7,32 @@ import {
   formatViewCountShort,
 } from "../lib/video-utils";
 import type { VideoData } from "../lib/types";
+import useSavedVideo from "../lib/useSavedVideo";
 
 // The VideoCard component receives a single video object as a prop.
 export default function VideoCard({ video }: { video: VideoData }) {
+  const { isSaved, saveVideo, removeVideo, isReady } = useSavedVideo(video.id);
+
   return (
-    // Next.js Link enables client-side navigation and prefetching.
-    // Client-side navigation means the app moves to another page without a full reload, creating a smoother user experience.
     <Link href={`/watch/${video.id}`} className="block">
-      <div className="w-full bg-sub-background rounded-lg shadow-md overflow-hidden">
+      <div className="relative w-full bg-sub-background rounded-lg shadow-md overflow-hidden">
+        {isReady && (
+          <button
+            className={`absolute top-2 right-2 z-10 w-8 h-8 p-1 rounded-full cursor-pointer bg-primary shadow-md hover:bg-secondary transition duration-300`}
+            onClick={(e) => {
+              e.preventDefault();
+              if (isSaved) {
+                removeVideo(video.id);
+              } else {
+                saveVideo(video.id);
+              }
+            }}
+          >
+            <span className="flex text-3xl font-medium text-white leading-3 justify-center items-center mb-1">
+              {isSaved ? "-" : "+"}
+            </span>
+          </button>
+        )}
         <div className="relative pb-[56.25%]">
           {/* Next.js Image optimizes size, loading, and format automatically. */}
           <Image
