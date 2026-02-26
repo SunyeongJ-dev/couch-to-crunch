@@ -106,5 +106,11 @@ export default function useSavedVideo(videoId: string) {
     }
   };
 
-  return { isSaved, saveVideo, removeVideo, videoIds, isReady };
+  return {
+    isSaved,
+    saveVideo,
+    removeVideo,
+    videoIds,
+    isReady,
+  };
 }
