@@ -5,6 +5,7 @@
 "use client";
 
 import { useState } from "react";
+import useSavedVideo from "@/app/lib/useSavedVideo";
 
 // Define its own type for the props it receives.
 type WatchClientProps = {
@@ -18,33 +19,18 @@ type WatchClientProps = {
   tags: string[];
 };
 
-// This key is used to store the list of saved video Ids in localStorage.
-const SAVED_VIDEOS_KEY = "saved_videos";
-
-// Loads saved video Ids from localStorage.
-export function loadSavedVideos(): string[] {
-  if (typeof window === "undefined") return [];
-  const saved = localStorage.getItem(SAVED_VIDEOS_KEY);
-  return saved ? JSON.parse(saved) : [];
-}
-
 export default function WatchClient({ video }: { video: WatchClientProps }) {
-  const [savedIds, setSavedIds] = useState<string[]>(() => loadSavedVideos());
+  const { videoIds, saveVideo, removeVideo, isReady } = useSavedVideo(video.id);
   const [expanded, setExpanded] = useState(false);
-  const saved = savedIds.includes(video.id);
+  const saved = videoIds.includes(video.id);
 
   // Toggles the saved state of the video.
   function toggleSave() {
     if (saved) {
-      // Creates a new array without the current video ID to avoid mutating state directly.
-      const newIds = savedIds.filter((id) => id !== video.id);
-      localStorage.setItem(SAVED_VIDEOS_KEY, JSON.stringify(newIds));
-      setSavedIds(newIds);
+      removeVideo(video.id);
     } else {
       // Adds the Id to existing savedIds array.
-      const newIds = [...savedIds, video.id];
-      localStorage.setItem(SAVED_VIDEOS_KEY, JSON.stringify(newIds));
-      setSavedIds(newIds);
+      saveVideo(video.id);
     }
   }
 
@@ -52,6 +38,13 @@ export default function WatchClient({ video }: { video: WatchClientProps }) {
     ? "whitespace-pre-line"
     : "whitespace-pre-line line-clamp-6";
 
+  if (!isReady) {
+    return (
+      <div className="flex w-full items-center justify-center py-20">
+        <p className="text-text-500">Loading...</p>
+      </div>
+    );
+  }
   return (
     <div className="p-4 sm:p-8 max-w-5xl mx-auto bg-sub-background rounded-xl">
       {/* Player */}
@@ -85,7 +78,7 @@ export default function WatchClient({ video }: { video: WatchClientProps }) {
         <div className="mt-3 text-xs sm:text-sm opacity-80">
           <span>{video.viewCount.toLocaleString()} views</span>
           <span className="mx-2">•</span>
-          <span>{new Date(video.publishedAt).toLocaleDateString()}</span>
+          <span>{new Date(video.publishedAt).toISOString().slice(0, 10)}</span>
           <span className="mx-2">•</span>
           <span>{Math.round(video.durationSec / 60)} min</span>
         </div>

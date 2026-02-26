@@ -5,12 +5,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useState, useRef, useEffect } from "react";
+import useSavedVideo from "@/app/lib/useSavedVideo";
 
 export default function Header() {
   const { data: session } = useSession();
   const [isModalOpen, setIsModalOpen] = useState(false);
   // useRef is used to reference a DOM element, in this case, the modal.
   const modalRef = useRef<HTMLDivElement>(null);
+  const { videoIds, isReady } = useSavedVideo("");
 
   useEffect(() => {
     if (!isModalOpen) return;
@@ -32,15 +34,6 @@ export default function Header() {
       document.removeEventListener("touchstart", handleClickOutside);
     };
   }, [isModalOpen]);
-
-  useEffect(() => {
-    if (session?.user) {
-      const videosInLocal = JSON.parse(
-        localStorage.getItem("saved_videos") || "[]",
-      );
-      localStorage.removeItem("saved_videos");
-    }
-  }, [session]);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-16 w-full px-8 bg-sub-background border-b border-text-300">
