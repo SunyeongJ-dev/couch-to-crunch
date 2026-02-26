@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { DM_Sans, Inter } from "next/font/google";
 import "./globals.css";
 import Header from "./ui/header";
-import NextAuthProviders from "./providers/Sessionprovider";
+import NextAuthProviders from "./providers/session-provider";
 
 // We load the DM Sans and Inter fonts from Google Fonts using Next.js's built-in font optimization.
 // The fonts are configured with specific weights and subsets, and we assign them to CSS variables for easy use throughout the application.
