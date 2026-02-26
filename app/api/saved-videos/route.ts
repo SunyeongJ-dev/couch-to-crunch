@@ -40,3 +40,19 @@ export async function GET(req: NextRequest) {
   });
   return NextResponse.json({ savedVideos });
 }
+
+export async function DELETE(req: NextRequest) {
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.id;
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  const { videoId } = await req.json();
+  if (typeof videoId !== "string") {
+    return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+  }
+  await prisma.userSavedVideo.deleteMany({
+    where: { userId, videoId },
+  });
+  return NextResponse.json({ success: true });
+}
