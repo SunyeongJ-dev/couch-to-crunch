@@ -73,18 +73,19 @@ async function loadForUser(userId: string) {
       currentUserId: userId,
       videoIds: savedVideoIds,
       isReady: true,
-      loadingPromise: null,
     });
   };
+
+  const promise = loadPromise();
 
   setSharedState({
     currentUserId: userId,
     isReady: false,
-    loadingPromise: loadPromise(),
+    loadingPromise: promise,
   });
 
   try {
-    await loadPromise();
+    await promise;
   } finally {
     if (sharedState.currentUserId === userId) {
       setSharedState({ loadingPromise: null });
