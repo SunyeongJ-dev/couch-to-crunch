@@ -109,7 +109,12 @@ export default function Filter({ value, onChange, isCollapsed }: FilterProps) {
         </ul>
       </div>
       <div className="mb-4 whitespace-nowrap">
-        <h3 className="text-l font-bold mb-1">Type</h3>
+        <h3 className="text-l font-bold mb-1">
+          Type
+          <span className="text-xs font-normal text-text-500 ml-2">
+            select multiple
+          </span>
+        </h3>
         <ul className="flex flex-col gap-0.5">
           {typeOptions.map((option) => (
             <li

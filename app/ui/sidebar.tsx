@@ -30,7 +30,7 @@ export default function SideBar({
       {/* This is the wrapper for the filter on smaller screens. */}
       <div className="sm:hidden fixed top-16 left-0 right-0 z-50 w-full border-b border-text-300 bg-sub-background px-6 py-3">
         <details className="group">
-          <summary className="cursor-pointer select-none font-semibold border-b border-text-300">
+          <summary className="cursor-pointer select-none font-semibold group-open:border-b group-open:border-text-300 group-open:pb-2">
             Filters
           </summary>
           <div className="fixed inset-0 top-16 z-40 hidden" />
