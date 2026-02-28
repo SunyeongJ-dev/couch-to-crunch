@@ -1,10 +1,9 @@
 // app/(home)/page.tsx
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import VideoGrid from "@/app/ui/video-grid";
 import SideBar from "@/app/ui/sidebar";
-import SearchBar from "@/app/ui/searchbar";
 import { getDurationCategory } from "@/app/lib/video-utils";
 import type { FilterState } from "@/app/ui/filter";
 import type { VideoData } from "@/app/lib/types";
@@ -27,11 +26,6 @@ export default function Home() {
   const [fetchedVideos, setFetchedVideos] = useState<VideoData[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Local state for search feature
-  const [searchWord, setSearchWord] = useState("");
-  const [isCompact, setIsCompact] = useState(true);
-  const [searchResults, setSearchResults] = useState<VideoData[]>([]);
-
   // Fetch videos from the database when the component mounts.
   // The API route /api/videos returns the cached videos that were seeded using the /api/seed route.
   useEffect(() => {
@@ -41,25 +35,9 @@ export default function Home() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Fetch videos using the search query whenever the searchWord changes.
-  useEffect(() => {
-    if (!searchWord) {
-      setSearchResults([]);
-      return;
-    }
-    // Debounce the search input by 300ms to avoid making too many API calls while the user is typing.
-    const searchHandler = setTimeout(() => {
-      fetch(`/api/videos?q=${encodeURIComponent(searchWord)}`)
-        .then((r) => r.json())
-        .then((data: VideoData[]) => setSearchResults(data));
-    }, 300);
-    return () => clearTimeout(searchHandler);
-  }, [searchWord]);
-
   // We apply the filters to the list of videos.
   // This includes filtering by level, type, and duration, as well as sorting by either newest or most viewed.
-  const videos: VideoData[] =
-    searchResults.length > 0 ? searchResults : fetchedVideos;
+  const videos: VideoData[] = fetchedVideos;
   const filtered = videos.filter((v) => {
     if (filters.level && !v.tags.includes(filters.level)) return false;
 
@@ -100,19 +78,7 @@ export default function Home() {
           onReset={() => setFilters(defaultFilters)}
         />
         <div className="flex flex-col w-full">
-          {loading ? (
-            <VideoGridSkeleton />
-          ) : (
-            <>
-              <SearchBar
-                searchWord={searchWord}
-                setSearchWord={setSearchWord}
-                isCompact={isCompact}
-                setIsCompact={setIsCompact}
-              />
-              <VideoGrid videos={sorted} />
-            </>
-          )}
+          {loading ? <VideoGridSkeleton /> : <VideoGrid videos={sorted} />}
         </div>
         <div className="h-8" />
       </div>
