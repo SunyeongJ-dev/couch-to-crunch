@@ -6,6 +6,8 @@
 
 import { useState } from "react";
 import useSavedVideo from "@/app/lib/hooks/useSavedVideo";
+import { useRouter } from "next/navigation";
+import Loading from "./loading";
 
 // Define its own type for the props it receives.
 type WatchClientProps = {
@@ -24,6 +26,8 @@ export default function WatchClient({ video }: { video: WatchClientProps }) {
   const [expanded, setExpanded] = useState(false);
   const saved = videoIds.includes(video.id);
 
+  const router = useRouter();
+
   // Toggles the saved state of the video.
   function toggleSave() {
     if (saved) {
@@ -39,11 +43,7 @@ export default function WatchClient({ video }: { video: WatchClientProps }) {
     : "whitespace-pre-line line-clamp-6";
 
   if (!isReady) {
-    return (
-      <div className="flex w-full items-center justify-center py-20">
-        <p className="text-text-500">Loading...</p>
-      </div>
-    );
+    return <Loading />;
   }
   return (
     <div className="p-4 sm:p-8 max-w-5xl mx-auto bg-sub-background rounded-xl">
@@ -64,7 +64,17 @@ export default function WatchClient({ video }: { video: WatchClientProps }) {
           <h1 className="mb-1 text-base sm:text-2xl font-bold">
             {video.title}
           </h1>
-          <span className="font-medium text-text-500">{video.channel}</span>
+
+          <span
+            className="hover:text-primary transition duration-200 cursor-pointer"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              router.push(`/channel/${encodeURIComponent(video.channel)}`);
+            }}
+          >
+            {video.channel}
+          </span>
 
           {/* Save Button */}
           <button
