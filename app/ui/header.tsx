@@ -16,6 +16,7 @@ export default function Header() {
   const { query, handleSearch, setQuery, setIsSearchOpen, isSearchOpen } =
     useSearch();
   const searchRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!isModalOpen && !isSearchOpen) return;
@@ -68,6 +69,7 @@ export default function Header() {
         <nav className="flex items-center">
           <div ref={searchRef} className="relative flex items-center">
             <input
+              ref={inputRef}
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -89,7 +91,10 @@ export default function Header() {
             <li className="self-center">
               <button
                 className={`${isSearchOpen ? "hidden" : "block"} flex items-center justify-center cursor-pointer`}
-                onClick={() => setIsSearchOpen(true)}
+                onClick={() => {
+                  setIsSearchOpen(true);
+                  setTimeout(() => inputRef.current?.focus(), 0);
+                }}
               >
                 <Image src="/search.svg" alt="Search" width={24} height={24} />
               </button>

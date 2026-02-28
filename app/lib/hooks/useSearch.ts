@@ -11,7 +11,6 @@ export default function useSearch() {
   const handleSearch = () => {
     if (!query.trim()) return;
     router.push(`/search?q=${encodeURIComponent(query)}`);
-    setIsSearchOpen(false);
   };
 
   return { query, handleSearch, isSearchOpen, setQuery, setIsSearchOpen };
