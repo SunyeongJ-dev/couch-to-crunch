@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import VideoGrid from "../ui/video-grid";
 import type { VideoData } from "../lib/types";
 import useSavedVideo from "@/app/lib/useSavedVideo";
+import VideoGridSkeleton from "../ui/video-grid-skeleton";
 
 export default function SavedPage() {
   const { videoIds, isReady } = useSavedVideo("");
@@ -32,7 +33,7 @@ export default function SavedPage() {
     return (
       <div className="flex w-full flex-col max-w-7xl mx-auto px-4 pt-2 pb-6 sm:px-8">
         <h1 className="text-2xl font-bold mb-8">Saved Videos</h1>
-        <p className="text-text-500">Loading saved videos...</p>
+        <VideoGridSkeleton />
       </div>
     );
   }

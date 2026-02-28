@@ -45,3 +45,4 @@ app/lib/videos-cache.json
 
 .env*.local
 app/generate-secret.js
+/app/test
