@@ -1,4 +1,6 @@
 // app/ui/video-card.tsx
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -8,17 +10,19 @@ import {
 } from "../lib/video-utils";
 import type { VideoData } from "../lib/types";
 import useSavedVideo from "../lib/useSavedVideo";
+import { useRouter } from "next/navigation";
 
 // The VideoCard component receives a single video object as a prop.
 export default function VideoCard({ video }: { video: VideoData }) {
   const { isSaved, saveVideo, removeVideo, isReady } = useSavedVideo(video.id);
+  const router = useRouter();
 
   return (
     <Link href={`/watch/${video.id}`} className="block">
       <div className="relative w-full bg-sub-background rounded-lg shadow-md overflow-hidden">
         {isReady && (
           <button
-            className={`absolute top-2 right-2 z-10 w-8 h-8 p-1 rounded-full cursor-pointer bg-primary shadow-md hover:bg-secondary transition duration-300`}
+            className={`absolute top-2 right-2 z-10 w-8 h-8 p-1 rounded-full cursor-pointer bg-primary shadow-md hover:bg-secondary transition duration-200`}
             onClick={(e) => {
               e.preventDefault();
               if (isSaved) {
@@ -55,7 +59,16 @@ export default function VideoCard({ video }: { video: VideoData }) {
               className="font-medium text-text-500 text-sm"
               title={video.channel}
             >
-              {video.channel}
+              <span
+                className="hover:text-primary transition duration-200"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  router.push(`/channel/${encodeURIComponent(video.channel)}`);
+                }}
+              >
+                {video.channel}
+              </span>
             </p>
           </div>
           <div className="mt-1 flex justify-between">
