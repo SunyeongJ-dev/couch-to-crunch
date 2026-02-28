@@ -94,6 +94,8 @@ async function loadForUser(userId: string) {
 }
 
 function loadForGuest() {
+  if (sharedState.isReady && sharedState.currentUserId === null) return;
+
   const savedVideoIds = getLocalSavedVideos();
   setSharedState({
     currentUserId: null,
@@ -120,6 +122,7 @@ export default function useSavedVideo(videoId: string) {
   }, []);
 
   useEffect(() => {
+    if (session === undefined) return;
     if (session?.user?.id) {
       void loadForUser(session.user.id);
       return;
