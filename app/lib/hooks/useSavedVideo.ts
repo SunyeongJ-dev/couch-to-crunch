@@ -129,7 +129,7 @@ export default function useSavedVideo(videoId: string) {
     }
 
     loadForGuest();
-  }, [session?.user?.id]);
+  }, [session]);
 
   useEffect(() => {
     setIsSaved(videoIds.includes(videoId));
