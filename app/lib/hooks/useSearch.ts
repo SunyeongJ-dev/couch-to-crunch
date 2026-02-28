@@ -1,3 +1,5 @@
+// app/lib/hooks/useSearch.ts
+// Custom React hook to manage search state and behavior in the header component.
 "use client";
 
 import { useState } from "react";
