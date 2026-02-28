@@ -2,12 +2,13 @@
 "use client";
 
 import { useState, useEffect, use } from "react";
-import VideoGrid from "./ui/video-grid";
-import SideBar from "./ui/sidebar";
-import SearchBar from "./ui/searchbar";
-import { getDurationCategory } from "./lib/video-utils";
-import type { FilterState } from "./ui/filter";
-import type { VideoData } from "./lib/types";
+import VideoGrid from "@/app/ui/video-grid";
+import SideBar from "@/app/ui/sidebar";
+import SearchBar from "@/app/ui/searchbar";
+import { getDurationCategory } from "@/app/lib/video-utils";
+import type { FilterState } from "@/app/ui/filter";
+import type { VideoData } from "@/app/lib/types";
+import VideoGridSkeleton from "@/app/ui/video-grid-skeleton";
 
 export default function Home() {
   // Local state for filters with default values.
@@ -116,21 +117,21 @@ export default function Home() {
           isCollapsed={isCollapsed}
           setIsCollapsed={setIsCollapsed}
         />
-        {/* If the videos are still loading, we show a loading message. This will replace with a skeleton component in the future. */}
-        {loading ? (
-          <div className="p-8">Loading videos...</div>
-        ) : (
-          /* Once the videos are loaded, we render the VideoGrid component with the filtered and sorted videos. */
-          <div className="flex flex-col w-full">
-            <SearchBar
-              searchWord={searchWord}
-              setSearchWord={setSearchWord}
-              isCompact={isCompact}
-              setIsCompact={setIsCompact}
-            />
-            <VideoGrid videos={sorted} />
-          </div>
-        )}
+        <div className="flex flex-col w-full">
+          {loading ? (
+            <VideoGridSkeleton />
+          ) : (
+            <>
+              <SearchBar
+                searchWord={searchWord}
+                setSearchWord={setSearchWord}
+                isCompact={isCompact}
+                setIsCompact={setIsCompact}
+              />
+              <VideoGrid videos={sorted} />
+            </>
+          )}
+        </div>
         <div className="h-8" />
       </div>
     </>
