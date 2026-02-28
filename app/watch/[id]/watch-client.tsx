@@ -5,7 +5,7 @@
 "use client";
 
 import { useState } from "react";
-import useSavedVideo from "@/app/lib/useSavedVideo";
+import useSavedVideo from "@/app/lib/hooks/useSavedVideo";
 
 // Define its own type for the props it receives.
 type WatchClientProps = {

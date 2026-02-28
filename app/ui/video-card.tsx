@@ -9,7 +9,7 @@ import {
   formatViewCountShort,
 } from "../lib/video-utils";
 import type { VideoData } from "../lib/types";
-import useSavedVideo from "../lib/useSavedVideo";
+import useSavedVideo from "../lib/hooks/useSavedVideo";
 import { useRouter } from "next/navigation";
 
 // The VideoCard component receives a single video object as a prop.

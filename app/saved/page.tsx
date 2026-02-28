@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import VideoGrid from "../ui/video-grid";
 import type { VideoData } from "../lib/types";
-import useSavedVideo from "@/app/lib/useSavedVideo";
+import useSavedVideo from "@/app/lib/hooks/useSavedVideo";
 import VideoGridSkeleton from "../ui/video-grid-skeleton";
 
 export default function SavedPage() {
