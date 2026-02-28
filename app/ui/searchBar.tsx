@@ -16,7 +16,7 @@ export default function SearchBar({
   if (isCompact) {
     return (
       <button
-        className="fixed bottom-8 right-8 z-50 bg-primary rounded-full p-3 cursor-pointer shadow-lg transition-all duration-300 opacity-100 scale-100"
+        className="fixed bottom-8 right-8 z-50 bg-primary hover:bg-secondary rounded-full p-3 cursor-pointer shadow-lg transition-all duration-300 opacity-100 scale-100"
         onClick={() => setIsCompact(false)}
       >
         <Image
