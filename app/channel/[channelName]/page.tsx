@@ -34,7 +34,7 @@ export default async function ChannelPage({ params, searchParams }: PageProps) {
       </h1>
       <SortControl currentSort={sort} />
       {videos.length === 0 ? (
-        <p className="text-text-500">No videos yet.</p>
+        <p className="text-text-500 mt-4">No videos yet.</p>
       ) : (
         <VideoGrid videos={videosWithFormattedDates} />
       )}
