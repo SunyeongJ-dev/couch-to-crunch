@@ -55,22 +55,22 @@ const prisma = new PrismaClient({ adapter });
 //   });
 
 // Convert video.youtubeId to video.id for all existing videos in the database
-async function migrateVideoIds() {
-  const videos = await prisma.video.findMany();
-  for (const video of videos) {
-    await prisma.video.update({
-      where: { id: video.id },
-      data: { id: video.youtubeId },
-    });
-  }
-}
+// async function migrateVideoIds() {
+//   const videos = await prisma.video.findMany();
+//   for (const video of videos) {
+//     await prisma.video.update({
+//       where: { id: video.id },
+//       data: { id: video.youtubeId },
+//     });
+//   }
+// }
 
-migrateVideoIds()
-  .then(() => {
-    console.log("Migration complete");
-    prisma.$disconnect();
-  })
-  .catch((e) => {
-    console.error(e);
-    prisma.$disconnect();
-  });
+// migrateVideoIds()
+//   .then(() => {
+//     console.log("Migration complete");
+//     prisma.$disconnect();
+//   })
+//   .catch((e) => {
+//     console.error(e);
+//     prisma.$disconnect();
+//   });
