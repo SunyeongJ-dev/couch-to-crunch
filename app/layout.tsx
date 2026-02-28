@@ -5,6 +5,7 @@ import { DM_Sans, Inter } from "next/font/google";
 import "./globals.css";
 import Header from "./ui/header";
 import NextAuthProviders from "./providers/session-provider";
+import { SidebarProvider } from "@/app/providers/sidebar-context";
 
 // We load the DM Sans and Inter fonts from Google Fonts using Next.js's built-in font optimization.
 // The fonts are configured with specific weights and subsets, and we assign them to CSS variables for easy use throughout the application.
@@ -37,10 +38,12 @@ export default function RootLayout({
       <body className={`${dmSans.variable} ${inter.variable} antialiased`}>
         {/* The Header component is included at the top level of the layout, ensuring that it is displayed on all pages of the application. */}
         <NextAuthProviders>
-          <Header />
-          <main className="fixed top-16 left-0 right-0 bottom-0 overflow-y-auto p-8">
-            {children}
-          </main>
+          <SidebarProvider>
+            <Header />
+            <main className="fixed top-16 left-0 right-0 bottom-0 overflow-y-auto p-8">
+              {children}
+            </main>
+          </SidebarProvider>
         </NextAuthProviders>
       </body>
     </html>

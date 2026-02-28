@@ -9,6 +9,7 @@ import { getDurationCategory } from "@/app/lib/video-utils";
 import type { FilterState } from "@/app/ui/filter";
 import type { VideoData } from "@/app/lib/types";
 import VideoGridSkeleton from "@/app/ui/video-grid-skeleton";
+import { useSidebar } from "@/app/providers/sidebar-context";
 
 export default function Home() {
   // Local state for filters with default values.
@@ -20,9 +21,7 @@ export default function Home() {
   };
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
 
-  const [isCollapsed, setIsCollapsed] = useState<boolean | undefined>(
-    undefined,
-  );
+  const { isCollapsed } = useSidebar();
 
   // Local state for videos and loading status
   const [fetchedVideos, setFetchedVideos] = useState<VideoData[]>([]);
@@ -56,21 +55,6 @@ export default function Home() {
     }, 300);
     return () => clearTimeout(searchHandler);
   }, [searchWord]);
-
-  useEffect(() => {
-    const savedSidebarState = localStorage.getItem("isSidebarCollapsed");
-    if (savedSidebarState !== null) {
-      setIsCollapsed(savedSidebarState === "true");
-    } else {
-      setIsCollapsed(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (isCollapsed !== undefined) {
-      localStorage.setItem("isSidebarCollapsed", isCollapsed.toString());
-    }
-  }, [isCollapsed]);
 
   // We apply the filters to the list of videos.
   // This includes filtering by level, type, and duration, as well as sorting by either newest or most viewed.
@@ -107,15 +91,13 @@ export default function Home() {
   return (
     <>
       <div
-        className={`${isCollapsed ? "sm:pl-16" : "sm:pl-56"} min-h-screen pt-12 flex flex-col items-start sm:flex-row sm:pt-0`}
+        className={`min-h-screen pt-12 flex flex-col items-start sm:flex-row sm:pt-0 ${isCollapsed ? "sm:pl-16" : "sm:pl-56"}`}
       >
         {/* Pass the filter state and handlers to the SideBar component, which allows the user to update the filters. */}
         <SideBar
           value={filters}
           onChange={setFilters}
           onReset={() => setFilters(defaultFilters)}
-          isCollapsed={isCollapsed}
-          setIsCollapsed={setIsCollapsed}
         />
         <div className="flex flex-col w-full">
           {loading ? (

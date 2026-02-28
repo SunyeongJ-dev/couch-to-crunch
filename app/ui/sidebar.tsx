@@ -1,20 +1,18 @@
 // app/ui/sidebar.tsx
+// This component is responsible for rendering the filter options and handling user interactions to update the filters.
+// It has two main layouts: a fixed sidebar on larger screens and a collapsible details element on smaller screens.
 "use client";
 
 import Filter from "./filter";
 import { FilterState } from "../ui/filter";
 import Image from "next/image";
-
-// The SideBar component is responsible for rendering the filter options and handling user interactions to update the filters.
-// It has two main layouts: a fixed sidebar on larger screens and a collapsible details element on smaller screens.
+import { useSidebar } from "../providers/sidebar-context";
 
 // The component receives the current filter state, an onChange handler to update the filter and an onReset handler to reset the filters to their default values.
 export default function SideBar({
   value,
   onChange,
   onReset,
-  isCollapsed,
-  setIsCollapsed,
 }: {
   value: FilterState;
   // onChange is a callback function that is called whenever the filter state changes.
@@ -22,9 +20,9 @@ export default function SideBar({
   onChange: (next: FilterState) => void;
   // This indicates that onReset should be a function that takes no arguments and returns void.
   onReset: () => void;
-  isCollapsed: boolean | undefined;
-  setIsCollapsed: React.Dispatch<React.SetStateAction<boolean | undefined>>;
 }) {
+  const { isCollapsed, setIsCollapsed, isMounted } = useSidebar();
+
   return (
     <>
       {/* This is the wrapper for the filter on smaller screens. */}
@@ -50,10 +48,10 @@ export default function SideBar({
       {/* This is the sidebar for larger screens. */}
       <aside
         className={`hidden overflow-x-hidden sm:block fixed left-0 top-16 bottom-0 z-50 bg-sub-background border-r border-text-300 overflow-y-auto transition-all duration-300 transform 
-          ${isCollapsed ? "w-16" : "w-56"} px-0 py-6`}
+          ${isMounted ? "transition-all duration-300" : ""} ${isCollapsed ? "w-16" : "w-56"} px-0 py-6`}
       >
         <button
-          className="absolute top-5 right-4.5 w-8 h-8 flex items-center justify-center z-50 cursor-pointer"
+          className={`absolute top-5 w-8 h-8 flex items-center justify-center z-50 cursor-pointer ${isCollapsed ? "right-4" : "right-6"}`}
           onClick={() => setIsCollapsed(!isCollapsed)}
         >
           {isCollapsed ? (
