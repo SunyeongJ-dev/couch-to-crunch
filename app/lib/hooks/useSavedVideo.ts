@@ -13,6 +13,7 @@ type SavedVideosState = {
   loadingPromise: Promise<void> | null;
 };
 
+// A state that is shared across all instances of the useSavedVideo hook.
 const sharedState: SavedVideosState = {
   currentUserId: null,
   videoIds: [],
@@ -20,37 +21,46 @@ const sharedState: SavedVideosState = {
   loadingPromise: null,
 };
 
+// A set of callback functions are called when the shared state changes.
 const listeners = new Set<(state: SavedVideosState) => void>();
 
+// This function is called to notify all listeners that the shared state has changed.
 function emit() {
   listeners.forEach((listener) => listener(sharedState));
 }
 
+// Allows components to track changes to the shared state.
 function subscribe(listener: (state: SavedVideosState) => void) {
   listeners.add(listener);
   listener(sharedState);
   return () => listeners.delete(listener);
 }
 
+// Get the list of saved video Ids from localStorage.
 function getLocalSavedVideos(): string[] {
   return JSON.parse(localStorage.getItem("saved_videos") || "[]");
 }
 
+// Update the shared state and notify all listeners.
 function setSharedState(newState: Partial<SavedVideosState>) {
   Object.assign(sharedState, newState);
   emit();
 }
 
+// Load the saved videos for a specific user.
 async function loadForUser(userId: string) {
+  // Skip when the current user is the same and the state is already ready.
   if (sharedState.currentUserId === userId && sharedState.isReady) {
     return;
   }
 
+  // Wait for promise when there is already a loading promise for the same user, to avoid duplicate requests.
   if (sharedState.currentUserId === userId && sharedState.loadingPromise) {
     await sharedState.loadingPromise;
     return;
   }
 
+  // Handle fetching, merging, saving, and state updates.
   const loadPromise = async () => {
     const localSaved = getLocalSavedVideos();
 
@@ -76,6 +86,7 @@ async function loadForUser(userId: string) {
     });
   };
 
+  // Start loading and set the loading promise in the state to prevent duplicate requests.
   const promise = loadPromise();
 
   setSharedState({
@@ -93,6 +104,7 @@ async function loadForUser(userId: string) {
   }
 }
 
+// Load the saved videos for a guest user (not logged in).
 function loadForGuest() {
   if (sharedState.isReady && sharedState.currentUserId === null) return;
 
@@ -116,6 +128,7 @@ export default function useSavedVideo(videoId: string) {
       setVideoIds(state.videoIds);
       setIsReady(state.isReady);
     });
+    // Clean up when the component unmounts.
     return () => {
       unsubscribe();
     };
