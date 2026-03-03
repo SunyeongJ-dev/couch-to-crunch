@@ -11,7 +11,7 @@ A full-stack workout video discovery app built with Next.js. Pulls curated YouTu
 **Video Discovery & Filtering**
 
 - Browse a responsive video grid with multi-select filters: level, type, duration, and sort order
-- Collapsible sidebar with context-based state management for clean mobile UX
+- Collapsible sidebar on desktop (context-based state) and native `<details>`/`<summary>` accordion on mobile
 - Channel pages with dynamic routing and per-channel sort controls
 
 **Search**
