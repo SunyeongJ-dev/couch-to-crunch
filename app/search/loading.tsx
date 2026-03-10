@@ -7,7 +7,9 @@ export default function Loading() {
       <h1 className="text-lg sm:text-2xl font-bold pb-3 mb-2 border-b-2 border-primary">
         Searching...
       </h1>
-      <VideoGridSkeleton />
+      <div className="mt-6">
+        <VideoGridSkeleton />
+      </div>
     </div>
   );
 }
