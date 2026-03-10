@@ -105,6 +105,19 @@ export default function Header() {
             <li
               className={`${isSearchOpen ? "hidden" : "block"} sm:block self-center`}
             >
+              <Link href="/">
+                <Image
+                  src="/home.svg"
+                  alt="Home"
+                  width={24}
+                  height={24}
+                  className="sm:ml-2"
+                />
+              </Link>
+            </li>
+            <li
+              className={`${isSearchOpen ? "hidden" : "block"} sm:block self-center`}
+            >
               <Link href="/saved">
                 {savedVideoCount !== null && savedVideoCount > 0 && isReady ? (
                   <div className="relative">
