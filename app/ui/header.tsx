@@ -6,12 +6,15 @@ import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useState, useRef, useEffect } from "react";
 import useSearch from "@/app/lib/hooks/useSearch";
+import useSavedVideo from "@/app/lib/hooks/useSavedVideo";
 
 export default function Header() {
   const { data: session } = useSession();
   const [isModalOpen, setIsModalOpen] = useState(false);
   // useRef is used to reference a DOM element, in this case, the modal.
   const modalRef = useRef<HTMLDivElement>(null);
+  const { isReady, videoIds } = useSavedVideo("");
+  const savedVideoCount = isReady ? videoIds.length : null;
 
   const { query, handleSearch, setQuery, setIsSearchOpen, isSearchOpen } =
     useSearch();
@@ -103,13 +106,28 @@ export default function Header() {
               className={`${isSearchOpen ? "hidden" : "block"} sm:block self-center`}
             >
               <Link href="/saved">
-                <Image
-                  src="/bookmark.svg"
-                  alt="Saved Workouts"
-                  width={24}
-                  height={24}
-                  className="sm:ml-2"
-                />
+                {savedVideoCount !== null && savedVideoCount > 0 && isReady ? (
+                  <div className="relative">
+                    <Image
+                      src="/bookmark-filled.svg"
+                      alt="Saved Workouts"
+                      width={24}
+                      height={24}
+                      className="sm:ml-2"
+                    />
+                    <span className="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                      {savedVideoCount}
+                    </span>
+                  </div>
+                ) : (
+                  <Image
+                    src="/bookmark.svg"
+                    alt="Saved Workouts"
+                    width={24}
+                    height={24}
+                    className="sm:ml-2"
+                  />
+                )}
               </Link>
             </li>
             <li
