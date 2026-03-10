@@ -122,15 +122,15 @@ export default function Header() {
                 >
                   {session?.user ? (
                     <Image
-                      src="/user.svg"
-                      alt="User Signed In"
+                      src="/user-filled.svg"
+                      alt="Signed In"
                       width={24}
                       height={24}
                     />
                   ) : (
                     <Image
-                      src="/log-in.svg"
-                      alt="Log In"
+                      src="/user.svg"
+                      alt="Sign In"
                       width={24}
                       height={24}
                     />
