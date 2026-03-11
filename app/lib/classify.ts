@@ -20,7 +20,8 @@ export function classifyTags(title: string, description: string): string[] {
     hiit: ["hiit", "interval", "tabata", "circuit"],
     strength: [
       "strength",
-      "weight",
+      "weight training",
+      "weightlifting",
       "muscle",
       "dumbbell",
       "kettlebell",
@@ -28,20 +29,35 @@ export function classifyTags(title: string, description: string): string[] {
       "upper body",
       "lower body",
       "abs",
+      "leg",
+      "legs",
+      "glute",
+      "quad",
+      "hamstring",
+      "squat",
+      "lunge",
+      "arm",
+      "bicep",
+      "tricep",
+      "chest",
+      "back workout",
+      "shoulder",
+      "core",
+      "push up",
+      "pull up",
     ],
-    yoga: ["yoga", "vinyasa", "hatha", "yin yoga", "flow", "sun salutation"],
+    yoga: ["yoga", "vinyasa", "hatha", "yin yoga", "yoga flow", "sun salutation"],
     stretching: [
       "stretch",
       "stretching",
       "mobility",
       "flexibility",
       "cool down",
-      "warm up",
     ],
     walking: ["walking", "walk at home", "indoor walk", "steps workout"],
   } as const;
 
-  // Prioritize types (not tested yet due to quota limits)
+  // Prioritize types
   const typePriority: (keyof typeof typeRules)[] = [
     "walking",
     "yoga",
@@ -55,14 +71,12 @@ export function classifyTags(title: string, description: string): string[] {
   for (const type of typePriority) {
     if (typeRules[type].some((kw) => titleText.includes(kw))) {
       tags.push(type);
-      break;
     }
   }
   if (!tags.some((t) => typePriority.includes(t as TypeTag))) {
     for (const type of typePriority) {
       if (typeRules[type].some((kw) => descText.includes(kw))) {
         tags.push(type);
-        break;
       }
     }
   }
@@ -82,14 +96,13 @@ export function classifyTags(title: string, description: string): string[] {
     ],
     intermediate: [
       "intermediate",
-      "burn",
+      "burn out",
       "conditioning",
       "level 2",
       "toning",
       "no rest",
       "sweat",
       "power",
-      "all levels",
     ],
     advanced: [
       "advanced",
