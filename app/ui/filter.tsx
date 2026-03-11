@@ -71,81 +71,93 @@ export default function Filter({ value, onChange, isCollapsed }: FilterProps) {
       <h2 className="text-xl font-bold mb-4 hidden sm:block whitespace-nowrap">
         Filters
       </h2>
+      {/* Sort By */}
       <div className="mb-4 whitespace-nowrap">
         <h3 className="text-l font-bold mb-1">Sort By</h3>
-        <ul className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5">
           {[
             { label: "Newest", value: "newest" },
             { label: "Most Viewed", value: "most_viewed" },
           ].map((option) => (
-            <li
+            <label
               key={option.value}
-              className={`select-none cursor-pointer px-2 rounded ${
-                value.sort === option.value ? "bg-accent text-white" : ""
-              }`}
-              onClick={() => setSort(option.value as SortOption)}
+              className="flex select-none cursor-pointer px-1"
             >
+              <input
+                type="radio"
+                checked={value.sort === option.value}
+                onChange={() => setSort(option.value as SortOption)}
+                className="accent-accent cursor-pointer mr-2 items-center"
+              />
               {option.label}
-            </li>
+            </label>
           ))}
-        </ul>
+        </div>
       </div>
+      {/* Level */}
       <div className="mb-4 whitespace-nowrap">
         <h3 className="text-l font-bold mb-1">Level</h3>
-        <ul className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5">
           {["beginner", "intermediate", "advanced"].map((option) => (
-            <li
+            <label
               key={option}
-              className={`select-none cursor-pointer px-2 rounded ${
-                value.level === option.toLowerCase()
-                  ? "bg-accent text-white"
-                  : ""
-              }`}
-              onClick={() => toggleLevel(option.toLowerCase() as LevelOption)}
+              className="flex select-none cursor-pointer px-1"
             >
+              <input
+                type="radio"
+                checked={value.level === option.toLowerCase()}
+                onClick={() => toggleLevel(option.toLowerCase() as LevelOption)}
+                onChange={() => {}}
+                className="accent-accent cursor-pointer mr-2 items-center"
+              />
               {option[0].toUpperCase() + option.slice(1)}
-            </li>
+            </label>
           ))}
-        </ul>
+        </div>
       </div>
+      {/* Type */}
       <div className="mb-4 whitespace-nowrap">
-        <h3 className="text-l font-bold mb-1">
-          Type
-          <span className="text-xs font-normal text-text-500 ml-2">
-            select multiple
-          </span>
-        </h3>
-        <ul className="flex flex-col gap-0.5">
+        <h3 className="text-l font-bold mb-1">Type</h3>
+        <div className="flex flex-col gap-0.5">
           {typeOptions.map((option) => (
-            <li
+            <label
               key={option.value}
-              className={`select-none cursor-pointer px-2 rounded ${
-                value.types.includes(option.value)
-                  ? "bg-accent text-white "
-                  : ""
-              }`}
-              onClick={() => toggleType(option.value)}
+              className="flex select-none cursor-pointer px-1"
             >
+              <input
+                type="checkbox"
+                checked={value.types.includes(option.value)}
+                className="accent-accent cursor-pointer mr-2 items-center"
+                onClick={() => toggleType(option.value)}
+                onChange={() => {}}
+              />
               {option.label}
-            </li>
+            </label>
           ))}
-        </ul>
+        </div>
       </div>
+      {/* Duration */}
       <div className="mb-4 whitespace-nowrap">
         <h3 className="text-l font-bold mb-1">Duration</h3>
-        <ul className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5">
           {durationOptions.map((option) => (
-            <li
+            <label
               key={option.value}
-              className={`select-none cursor-pointer px-2 rounded ${
-                value.duration === option.value ? "bg-accent text-white" : ""
-              }`}
-              onClick={() => toggleDuration(option.value)}
+              className="flex select-none cursor-pointer px-1"
             >
+              <input
+                type="radio"
+                checked={value.duration === option.value}
+                className="accent-accent cursor-pointer mr-2 items-center"
+                onClick={() => {
+                  toggleDuration(option.value);
+                }}
+                onChange={() => {}}
+              />
               {option.label}
-            </li>
+            </label>
           ))}
-        </ul>
+        </div>
       </div>
     </div>
   );

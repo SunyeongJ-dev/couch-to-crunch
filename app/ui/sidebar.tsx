@@ -32,7 +32,7 @@ export default function SideBar({
             Filters
           </summary>
           <div className="fixed inset-0 top-16 z-40 hidden" />
-          <div className="relative z-50 overflow-y-auto no-scrollbar pt-4 pb-6 px-4">
+          <div className="relative z-50 overflow-y-auto no-scrollbar pt-4 pb-6 px-4 max-h-[calc(100vh-6rem)]">
             {/* Pass the current filter state and handlers again to the Filter component. */}
             <Filter value={value} onChange={onChange} />
             <button
