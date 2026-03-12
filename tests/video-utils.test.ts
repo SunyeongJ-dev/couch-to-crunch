@@ -22,6 +22,9 @@ describe("parseIso8601DurationToSeconds", () => {
   test("parses ISO 8601 duration to seconds", () => {
     expect(parseIso8601DurationToSeconds("PT1H2M3S")).toBe(3723);
     expect(parseIso8601DurationToSeconds("PT30M")).toBe(1800);
+    expect(parseIso8601DurationToSeconds("")).toBe(0);
+    expect(parseIso8601DurationToSeconds("PT0S")).toBe(0);
+    expect(parseIso8601DurationToSeconds("invalid")).toBe(0);
   });
 });
 
@@ -31,6 +34,8 @@ describe("formatViewCountShort", () => {
     expect(formatViewCountShort(1500000)).toBe("1.5M");
     expect(formatViewCountShort(0)).toBe("0");
     expect(formatViewCountShort(999)).toBe("999");
+    expect(formatViewCountShort(1000000000)).toBe("1B");
+    expect(formatViewCountShort(NaN)).toBe("0");
   });
 });
 
@@ -39,6 +44,8 @@ describe("formatDurationFromSeconds", () => {
     expect(formatDurationFromSeconds(125)).toBe("2:05");
     expect(formatDurationFromSeconds(3605)).toBe("1:00:05");
     expect(formatDurationFromSeconds(0)).toBe("0:00");
+    expect(formatDurationFromSeconds(-100)).toBe("0:00");
+    expect(formatDurationFromSeconds(NaN)).toBe("0:00");
   });
 });
 
@@ -48,6 +55,10 @@ describe("formatPublishedAgo", () => {
     const twoMonthsAgo = new Date(
       now.getTime() - 60 * 24 * 60 * 60 * 1000,
     ).toISOString();
+    const futureDate = new Date(now.getTime() + 60).toISOString();
     expect(formatPublishedAgo(twoMonthsAgo)).toBe("2 months ago");
+    expect(formatPublishedAgo("")).toBe("");
+    expect(formatPublishedAgo(futureDate)).toBe("just now");
+    expect(formatPublishedAgo("not-a-date")).toBe("");
   });
 });
