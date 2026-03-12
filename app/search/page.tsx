@@ -30,7 +30,7 @@ export default async function SearchPage(params: PageProps) {
         Search results for "{q}"
       </h1>
       {videos.length === 0 ? (
-        <p className="text-text-500 mt-4">No results.</p>
+        <p className="text-text-500 mt-4">No results found.</p>
       ) : (
         <VideoGrid videos={videosWithFormattedDates} />
       )}

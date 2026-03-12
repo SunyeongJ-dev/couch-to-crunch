@@ -56,7 +56,7 @@ export default function Header() {
         <Link href="/">
           <Image
             src="/favicon.ico"
-            alt="Couch to Crunch"
+            alt="Couch to Crunch Logo"
             width={24}
             height={24}
             className="block sm:hidden mb-0.5 min-w-6"
@@ -87,7 +87,7 @@ export default function Header() {
                 setQuery("");
               }}
             >
-              <Image src="/x.svg" alt="Search" width={16} height={16} />
+              <Image src="/x.svg" alt="Close Search" width={16} height={16} />
             </button>
           </div>
           <ul className="flex items-center gap-5">
