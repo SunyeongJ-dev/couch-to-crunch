@@ -74,15 +74,19 @@ export function classifyTags(title: string, description: string): string[] {
     "strength",
   ];
 
+  // Helper function to check if a keyword exists as a whole word in the text
+  const matchesWord = (text: string, kw: string) =>
+    new RegExp(`\\b${kw}\\b`).test(text);
+
   // We first check the title for type keywords, and if we don't find any, we check the description
   for (const type of typeList) {
-    if (typeRules[type].some((kw) => titleText.includes(kw))) {
+    if (typeRules[type].some((kw) => matchesWord(titleText, kw))) {
       tags.push(type);
     }
   }
   if (!tags.some((t) => typeList.includes(t as TypeTag))) {
     for (const type of typeList) {
-      if (typeRules[type].some((kw) => descText.includes(kw))) {
+      if (typeRules[type].some((kw) => matchesWord(descText, kw))) {
         tags.push(type);
       }
     }
@@ -137,14 +141,14 @@ export function classifyTags(title: string, description: string): string[] {
 
   // Similar to type classification, we first check the title for level keywords, and if we don't find any, we check the description
   for (const lvl of levelPriority) {
-    if (levelRules[lvl].some((kw) => titleText.includes(kw))) {
+    if (levelRules[lvl].some((kw) => matchesWord(titleText, kw))) {
       tags.push(lvl);
       break;
     }
   }
   if (!tags.some((t) => levelPriority.includes(t as LevelTag))) {
     for (const lvl of levelPriority) {
-      if (levelRules[lvl].some((kw) => descText.includes(kw))) {
+      if (levelRules[lvl].some((kw) => matchesWord(descText, kw))) {
         tags.push(lvl);
         break;
       }
