@@ -38,8 +38,15 @@ export default function Home() {
   // We apply the filters to the list of videos.
   // This includes filtering by level, type, and duration, as well as sorting by either newest or most viewed.
   const videos: VideoData[] = fetchedVideos;
+  const levelTags = ["beginner", "intermediate", "advanced"];
   const filtered = videos.filter((v) => {
-    if (filters.level && !v.tags.includes(filters.level)) return false;
+    // If the video has no level tag, we allow it to pass through all level filters.
+    if (
+      filters.level &&
+      levelTags.some((tag) => v.tags.includes(tag)) &&
+      !v.tags.includes(filters.level)
+    )
+      return false;
 
     if (filters.types.length > 0) {
       const matchAnyType = filters.types.some((t) => v.tags.includes(t));
