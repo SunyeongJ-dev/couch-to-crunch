@@ -46,7 +46,14 @@ export function classifyTags(title: string, description: string): string[] {
       "push up",
       "pull up",
     ],
-    yoga: ["yoga", "vinyasa", "hatha", "yin yoga", "yoga flow", "sun salutation"],
+    yoga: [
+      "yoga",
+      "vinyasa",
+      "hatha",
+      "yin yoga",
+      "yoga flow",
+      "sun salutation",
+    ],
     stretching: [
       "stretch",
       "stretching",
@@ -57,8 +64,8 @@ export function classifyTags(title: string, description: string): string[] {
     walking: ["walking", "walk at home", "indoor walk", "steps workout"],
   } as const;
 
-  // Prioritize types
-  const typePriority: (keyof typeof typeRules)[] = [
+  // List of types
+  const typeList: (keyof typeof typeRules)[] = [
     "walking",
     "yoga",
     "stretching",
@@ -68,13 +75,13 @@ export function classifyTags(title: string, description: string): string[] {
   ];
 
   // We first check the title for type keywords, and if we don't find any, we check the description
-  for (const type of typePriority) {
+  for (const type of typeList) {
     if (typeRules[type].some((kw) => titleText.includes(kw))) {
       tags.push(type);
     }
   }
-  if (!tags.some((t) => typePriority.includes(t as TypeTag))) {
-    for (const type of typePriority) {
+  if (!tags.some((t) => typeList.includes(t as TypeTag))) {
+    for (const type of typeList) {
       if (typeRules[type].some((kw) => descText.includes(kw))) {
         tags.push(type);
       }
