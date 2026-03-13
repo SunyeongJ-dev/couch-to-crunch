@@ -36,7 +36,7 @@ export default function SideBar({
             {/* Pass the current filter state and handlers again to the Filter component. */}
             <Filter value={value} onChange={onChange} />
             <button
-              className="w-full text-sm text-sub-background bg-primary hover:bg-secondary transition duration-300 px-3 py-1 rounded-md font-medium cursor-pointer"
+              className="w-full text-sm text-sub-background bg-accent hover:bg-accent-dark transition duration-300 px-3 py-1 rounded-md font-medium cursor-pointer"
               onClick={onReset}
             >
               Reset
@@ -75,7 +75,7 @@ export default function SideBar({
         <div className="px-8">
           <Filter value={value} onChange={onChange} isCollapsed={isCollapsed} />
           <button
-            className={`${isCollapsed ? "hidden" : "block"} mt-2 text-sm text-sub-background bg-primary hover:bg-secondary transition duration-300 px-3 py-1 rounded-md font-medium cursor-pointer`}
+            className={`${isCollapsed ? "hidden" : "block"} mt-2 text-sm text-sub-background bg-accent hover:bg-accent-dark transition duration-300 px-3 py-1 rounded-md font-medium cursor-pointer`}
             onClick={onReset}
           >
             Reset

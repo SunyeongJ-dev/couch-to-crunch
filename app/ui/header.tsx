@@ -72,6 +72,7 @@ export default function Header() {
         <nav className="flex items-center">
           <div ref={searchRef} className="relative flex items-center">
             <input
+              aria-label="Search Bar"
               ref={inputRef}
               type="text"
               value={query}
