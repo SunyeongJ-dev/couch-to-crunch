@@ -66,7 +66,7 @@ export default function Filter({ value, onChange, isCollapsed }: FilterProps) {
 
   return (
     <div
-      className={`transition-all duration-300 transform ${isCollapsed ? "opacity-0" : "opacity-100"}`}
+      className={`transition-all duration-300 transform ${isCollapsed ? "invisible opacity-0" : "visible opacity-100"}`}
     >
       <h2 className="text-xl font-bold mb-4 hidden sm:block whitespace-nowrap">
         Filters
