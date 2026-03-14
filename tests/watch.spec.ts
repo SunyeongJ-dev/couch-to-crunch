@@ -9,6 +9,7 @@ test.beforeEach(async ({ page }) => {
     .getByRole("heading", { level: 3 })
     .first()
     .click();
+  await page.waitForURL(/\/watch\//);
 });
 
 test("display video player and title", async ({ page }) => {
@@ -17,6 +18,7 @@ test("display video player and title", async ({ page }) => {
 });
 
 test("save button toggles", async ({ page }) => {
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await page.getByRole("button", { name: "Save" }).click();
   await expect(page.getByRole("button", { name: "Unsave" })).toBeVisible();
 
@@ -25,6 +27,7 @@ test("save button toggles", async ({ page }) => {
 });
 
 test("show more toggles", async ({ page }) => {
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await page.getByRole("button", { name: "Show More" }).click();
   await expect(page.getByRole("button", { name: "Show Less" })).toBeVisible();
 
