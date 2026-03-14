@@ -1,5 +1,5 @@
 // app/api/auth/[...nextauth]/route.ts
-import NextAuth, { DefaultSession } from "next-auth";
+import NextAuth, { DefaultSession, User } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import type { Session } from "next-auth";
 import type { JWT } from "next-auth/jwt";
@@ -33,17 +33,17 @@ export const authOptions = {
       }
       return session;
     },
-    async signIn({ user }: any) {
+    async signIn({ user }: { user: User }) {
       await prisma.user.upsert({
         where: { id: user.id },
         update: {
-          email: user.email,
+          email: user.email!,
           name: user.name!,
           image: user.image!,
         },
         create: {
           id: user.id,
-          email: user.email,
+          email: user.email!,
           name: user.name!,
           image: user.image!,
         },

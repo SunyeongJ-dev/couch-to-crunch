@@ -30,7 +30,7 @@ export default async function ChannelPage({ params, searchParams }: PageProps) {
   return (
     <div className="flex w-full flex-col max-w-7xl mx-auto px-4 pt-2 pb-6 sm:px-8">
       <h1 className="text-lg sm:text-2xl font-bold pb-3 mb-2 border-b-2 border-primary">
-        {channelNameDecoded}'s Videos
+        {channelNameDecoded}&apos;s Videos
       </h1>
       <SortControl currentSort={sort} />
       {videos.length === 0 ? (

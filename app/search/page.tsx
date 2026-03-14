@@ -27,7 +27,7 @@ export default async function SearchPage(params: PageProps) {
   return (
     <div className="flex w-full flex-col max-w-7xl mx-auto px-4 pt-2 pb-6 sm:px-8">
       <h1 className="text-lg sm:text-2xl font-bold pb-3 mb-8 border-b-2 border-primary">
-        Search results for "{q}"
+        Search results for &quot;{q}&quot;
       </h1>
       {videos.length === 0 ? (
         <p className="text-text-500 mt-4">No results found.</p>

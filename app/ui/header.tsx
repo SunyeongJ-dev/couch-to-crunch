@@ -48,7 +48,7 @@ export default function Header() {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("touchstart", handleClickOutside);
     };
-  }, [isModalOpen, isSearchOpen]);
+  }, [isModalOpen, isSearchOpen, setQuery, setIsSearchOpen]);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-16 w-full px-8 bg-sub-background border-b border-text-300">
