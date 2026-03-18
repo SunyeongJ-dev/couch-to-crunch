@@ -35,7 +35,9 @@ export default function SavedPage() {
   if (!isReady || loading) {
     return (
       <div className="flex w-full flex-col max-w-7xl mx-auto px-4 pt-2 pb-6 sm:px-8">
-        <h1 className="text-2xl font-bold mb-8">Saved Videos</h1>
+        <h1 className="text-2xl font-bold pb-3 mb-8 border-b-2 border-primary">
+          Saved Videos
+        </h1>
         <VideoGridSkeleton />
       </div>
     );
