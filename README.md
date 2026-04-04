@@ -96,9 +96,9 @@ Since this app is scoped to YouTube and Google OAuth only, the YouTube video ID 
 
 Radio buttons appeared checked on initial render but became visually unchecked after any interaction. Initially suspected Tailwind v4's preflight CSS resetting `appearance` on form elements — but the actual root cause was two `<Filter>` components (mobile + desktop) both rendered in the DOM with the same `name="sort"` attribute. Browsers group all same-name radios document-wide, creating a 4-way conflict that overrode React's controlled state. Removing the `name` attribute let React take full control via the `checked` prop.
 
-### 2. Deselectable radio button pattern
+### 2. Deselectable checkbox button pattern
 
-`onChange` on a radio input doesn't fire when clicking an already-selected option, making it impossible to deselect. Used `onClick` for the toggle logic (which fires on every click regardless of current state) alongside a no-op `onChange={() => {}}` to satisfy React's controlled input requirement.
+`onChange` on a checkbox input doesn't fire when clicking an already-selected option, making it impossible to deselect. Used `onClick` for the toggle logic (which fires on every click regardless of current state) alongside a no-op `onChange={() => {}}` to satisfy React's controlled input requirement.
 
 ### 3. Partial string matching in keyword classification
 
