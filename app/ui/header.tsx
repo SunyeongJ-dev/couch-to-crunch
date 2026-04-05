@@ -169,36 +169,47 @@ export default function Header() {
                   )}
                 </button>
                 {isModalOpen && (
-                  <div className="absolute right-8 top-16 bg-sub-background border border-text-300 p-4">
-                    {session?.user ? (
-                      <div className="flex flex-col gap-2">
-                        <p className="text-md">
-                          Hello,{" "}
-                          {session.user.name ||
-                            session.user.email?.split("@")[0]}
-                          !
-                        </p>
+                  <div className="absolute right-8 top-16 bg-sub-background border border-text-300 p-4 min-w-48">
+                    <div className="flex flex-col gap-3">
+                      {session?.user ? (
+                        <div className="flex flex-col gap-2">
+                          <p className="text-md">
+                            Hello,{" "}
+                            {session.user.name ||
+                              session.user.email?.split("@")[0]}
+                            !
+                          </p>
+                          <button
+                            onClick={() => {
+                              signOut();
+                              setIsModalOpen(false);
+                            }}
+                            className="w-full py-2 px-4 bg-primary rounded hover:bg-secondary text-white cursor-pointer"
+                          >
+                            Sign Out
+                          </button>
+                        </div>
+                      ) : (
                         <button
                           onClick={() => {
-                            signOut();
+                            signIn("google");
                             setIsModalOpen(false);
                           }}
-                          className="w-full py-2 px-4 bg-primary rounded hover:bg-secondary text-white cursor-pointer"
+                          className="w-full py-2 px-4 bg-accent text-white rounded hover:bg-accent-dark cursor-pointer"
                         >
-                          Sign Out
+                          Sign In with Google
                         </button>
+                      )}
+                      <div className="border-t border-text-300 pt-3 mt-1 flex justify-center">
+                        <Link
+                          href="/privacy-policy"
+                          onClick={() => setIsModalOpen(false)}
+                          className="text-sm text-text-secondary hover:text-primary transition-colors"
+                        >
+                          Privacy Policy
+                        </Link>
                       </div>
-                    ) : (
-                      <button
-                        onClick={() => {
-                          signIn("google");
-                          setIsModalOpen(false);
-                        }}
-                        className="w-full py-2 px-4 bg-accent text-white rounded hover:bg-accent-dark cursor-pointer"
-                      >
-                        Sign In with Google
-                      </button>
-                    )}
+                    </div>
                   </div>
                 )}
               </div>
