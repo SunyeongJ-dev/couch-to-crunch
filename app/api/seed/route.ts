@@ -138,10 +138,10 @@ async function searchVideoIds(
 async function fetchVideoDetails(videoIds: string[], apiKey: string) {
   // YouTube videos.list max 50 ids per call
   const chunks: string[][] = [];
+  const results: VideoData[] = [];
+
   for (let i = 0; i < videoIds.length; i += 50)
     chunks.push(videoIds.slice(i, i + 50));
-
-  const results: VideoData[] = [];
 
   for (const chunk of chunks) {
     const url = new URL(YT_VIDEOS_URL);
@@ -157,7 +157,8 @@ async function fetchVideoDetails(videoIds: string[], apiKey: string) {
 
     const data = (await res.json()) as VideosResponse;
     for (const it of data.items ?? []) {
-      const id = it.id as string;
+      if (!it.id) continue;
+      const id = it.id;
 
       const title = it.snippet?.title ?? "";
       const channel = it.snippet?.channelTitle ?? "";
@@ -197,13 +198,6 @@ async function fetchVideoDetails(videoIds: string[], apiKey: string) {
 export async function GET(req: Request) {
   try {
     const apiKey = assertApiKey();
-
-    // Clear all videos in the database.
-    const { searchParams } = new URL(req.url);
-    const clear = searchParams.get("clear") === "1";
-    if (clear) {
-      await prisma.video.deleteMany({});
-    }
 
     // Use a Set to avoid duplicate video IDs across queries and durations.
     const idSet = new Set<string>();
