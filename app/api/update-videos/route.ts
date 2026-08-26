@@ -59,7 +59,16 @@ async function fetchVideoViewCounts(videoIds: string[], apiKey: string) {
   return results;
 }
 
-export async function GET() {
+export async function GET(rq: Request) {
+  const authHeader = rq.headers.get("authorization");
+
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return NextResponse.json(
+      { ok: false, error: "Unauthorized" },
+      { status: 401 },
+    );
+  }
+
   const apiKey = assertApiKey();
 
   const videos = await prisma.video.findMany({
