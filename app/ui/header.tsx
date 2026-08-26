@@ -66,7 +66,8 @@ export default function Header() {
             alt="Couch to Crunch Logo"
             width={200}
             height={32}
-            className="hidden sm:block"
+            className="hidden sm:block w-auto" 
+            loading="eager"
           />
         </Link>
         <nav className="flex items-center">
