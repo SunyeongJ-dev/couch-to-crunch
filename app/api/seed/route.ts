@@ -195,7 +195,14 @@ async function fetchVideoDetails(videoIds: string[], apiKey: string) {
   return results;
 }
 
-export async function GET(req: Request) {
+export async function GET() {
+  if (process.env.NODE_ENV === "production") {
+    return NextResponse.json(
+      { ok: false, error: "Not available in production" },
+      { status: 403 },
+    );
+  }
+
   try {
     const apiKey = assertApiKey();
 
