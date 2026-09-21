@@ -1,16 +1,12 @@
 # Couch to Crunch
 
-A full-stack workout video discovery app built with Next.js. Pulls curated YouTube workouts into a PostgreSQL database, and lets users filter, watch, and save favorites — with Google OAuth and localStorage fallback for guests.
-
----
-
 ## Project Overview
 
-Couch to Crunch solves a specific problem: finding free, high-quality home workouts on YouTube is tedious. The app pre-fetches and classifies videos across 44 curated search queries, then exposes them through a filtered browse experience — no ads, no algorithm, just workouts.
+Couch to Crunch is a full-stack workout discovery app that organizes curated YouTube workout videos into a searchable and filterable catalog. Built with Next.js, TypeScript, Prisma, and PostgreSQL, it includes Google authentication, guest-to-user save synchronization, automated daily view-count updates, and automated testing.
 
-Users can filter by level, type, and duration, save favorites (as a guest or signed in), and browse by channel. Saved videos sync from localStorage to the database automatically on login.
+[Live Demo](https://couch-to-crunch.vercel.app)
 
----
+![Couch to Crunch screenshot](./public/screenshot.png)
 
 ## Tech Stack
 
@@ -22,48 +18,119 @@ Users can filter by level, type, and duration, save favorites (as a guest or sig
 | Database    | PostgreSQL via Prisma ORM |
 | Auth        | NextAuth (Google OAuth)   |
 | Data Source | YouTube Data API v3       |
+| Testing     | Jest, Playwright          |
+| Automation  | Vercel Cron Jobs          |
 | Deployment  | Vercel + Vercel Postgres  |
 
----
+## Getting Started
+
+### Prerequisites
+
+- Node.js
+- PostgreSQL database (local or hosted)
+- Google OAuth credentials
+- YouTube Data API key
+
+### Installation
+
+```bash
+git clone https://github.com/SunyeongJ-dev/couch-to-crunch.git
+cd couch-to-crunch
+npm install
+```
+
+### Environment Variables
+
+Create a `.env.local` file:
+
+```bash
+DATABASE_URL=
+YOUTUBE_API_KEY=
+AUTH_SECRET=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+CRON_SECRET=
+```
+
+### Run the Development Server
+
+```bash
+npm run dev
+```
+
+Open `http://localhost:3000` in your browser.
+
+### Database Setup
+
+Run the Prisma migrations:
+
+```bash
+npx prisma migrate dev
+```
+
+Start the development server, then open:
+
+```bash
+http://localhost:3000/api/seed
+```
+
+to populate the database with curated YouTube workout videos.
+
+### Testing
+
+```bash
+# Unit tests
+npm run test:unit
+
+# End-to-end tests
+npm run test:e2e
+```
 
 ## Architecture
 
 ### App Structure
 
 ```
+
 app/
-├── (home)/          # Browse page with filters and video grid
-├── watch/[id]/      # Video player with metadata and save button
-├── saved/           # User's saved video collection
-├── search/          # Server-rendered full-text search results
-├── channel/[name]/  # Per-channel video listing
+├── (home)/         # Browse page with filters and video grid
 ├── api/
-│   ├── videos/      # Video fetching with filters
-│   ├── saved-videos/# Save/unsave (auth + guest sync)
-│   ├── auth/        # NextAuth Google OAuth handler
-│   └── seed/        # YouTube → PostgreSQL pipeline
-├── ui/              # Reusable components (Header, Sidebar, VideoCard, ...)
-├── lib/             # Hooks (useSavedVideo, useSearch) and utilities
-└── providers/       # Session and Sidebar context providers
+│ ├── auth/         # NextAuth Google OAuth handler
+| ├── clear-videos/ # Clear all videos from database (dev only)
+│ ├── saved-videos/ # Save/unsave (auth + guest sync)
+│ ├── seed/         # YouTube → PostgreSQL pipeline (dev only)
+| ├── update-videos/# Update YouTube view counts
+│ └── videos/       # Video fetching with filters
+├── channel/[name]/ # Per-channel video listing
+├── lib/            # Hooks (useSavedVideo, useSearch) and utilities
+├── privacy-policy/ # Privacy Policy page
+├── providers/      # Session and Sidebar context providers
+├── saved/          # User's saved video collection
+├── search/         # Server-rendered keyword search results
+├── ui/             # Reusable components (Header, Sidebar, VideoCard, ...)
+└── watch/[id]/     # Video player with metadata and save button
+
 ```
 
 ### Data Flow
 
-**Seed pipeline:** A script calls the YouTube Data API across 44 curated search queries, filters out Shorts and videos under 5 minutes, auto-classifies each video by type/level/duration using keyword matching, then upserts into PostgreSQL. Safe to re-run.
+**Seed pipeline:** The `/api/seed` route calls the YouTube Data API across 44 curated search queries, filters out Shorts, videos under 5 minutes, and other non-workout content, auto-classifies each video by type/level/duration using keyword matching, then upserts into PostgreSQL. Safe to re-run.
 
 **User interactions:** Filtering and search are handled server-side via Prisma queries. Saves use optimistic UI updates on the client, writing to either localStorage (guest) or the database (authenticated). On login, any guest saves are synced to the database automatically.
+
+**Scheduled updates:** Vercel Cron Jobs trigger a daily API route that fetches current YouTube view counts through the YouTube Data API and updates the corresponding PostgreSQL records.
 
 ### Schema
 
 ```
-Video         — stores YouTube metadata and auto-classified tags
-User          — stores authenticated user info
+
+Video — stores YouTube metadata and auto-classified tags
+User — stores authenticated user info
 UserSavedVideo — join table linking users to saved videos
+
 ```
 
-Since this app is scoped to YouTube and Google OAuth only, the YouTube video ID and Google user ID (`sub`) are used directly as primary keys. This keeps the schema simple given the fixed scope. In a more extensible app, using internal UUIDs as primary keys with external IDs stored as separate fields would be the more robust approach.
-
----
+Since the application is scoped to YouTube and Google OAuth, YouTube video IDs and Google user IDs are used directly as primary keys.
 
 ## Key Features
 
@@ -88,7 +155,11 @@ Since this app is scoped to YouTube and Google OAuth only, the YouTube video ID 
 - Google OAuth via NextAuth
 - Session JWT carries `userId` for secure server-side data access
 
----
+**Automated Video Statistics**
+
+- Daily view-count updates using Vercel Cron Jobs
+- Fetches current statistics from the YouTube Data API
+- Updates existing PostgreSQL records automatically
 
 ## Challenges & Solutions
 
@@ -119,9 +190,3 @@ The `isCollapsed` state reset to its default on every page navigation. Moving it
 ### 7. Vercel build failure due to missing Prisma client
 
 TypeScript type errors only appeared in the Vercel build, not locally — because `prisma generate` hadn't run in the CI environment. Fixed by adding `"postinstall": "prisma generate"` to `package.json`, ensuring the client is always generated after `npm install`.
-
----
-
-## Live Demo
-
-[couch-to-crunch.vercel.app](https://couch-to-crunch.vercel.app)
