@@ -1,4 +1,4 @@
-// app/lib/useSavedVideo.ts
+// app/lib/hooks/useSavedVideo.ts
 // Custom React hook to manage saved videos.
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
@@ -38,7 +38,7 @@ function subscribe(listener: (state: SavedVideosState) => void) {
 
 // Get the list of saved video Ids from localStorage.
 function getLocalSavedVideos(): string[] {
-  return JSON.parse(localStorage.getItem("saved_videos") || "[]");
+  return JSON.parse(localStorage.getItem(SAVED_VIDEOS_KEY) || "[]");
 }
 
 // Update the shared state and notify all listeners.
@@ -120,7 +120,6 @@ function loadForGuest() {
 export default function useSavedVideo(videoId: string) {
   const { data: session } = useSession();
   const [videoIds, setVideoIds] = useState<string[]>([]);
-  const [isSaved, setIsSaved] = useState(false);
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
@@ -144,14 +143,10 @@ export default function useSavedVideo(videoId: string) {
     loadForGuest();
   }, [session]);
 
-  useEffect(() => {
-    setIsSaved(videoIds.includes(videoId));
-  }, [videoIds, videoId]);
+  const isSaved = videoIds.includes(videoId);
 
   const saveVideo = (targetVideoId: string) => {
     if (session?.user?.id) {
-      // When the user logs in, this checks if there are any saved videos in localStorage.
-      // If there are, it sends them to the server to be saved in the database and then clears the localStorage.
       if (!videoIds.includes(targetVideoId)) {
         fetch("/api/saved-videos", {
           method: "POST",

@@ -148,7 +148,7 @@ export default function PrivacyPolicy() {
           </h2>
           <p className="text-text-secondary">
             My service integrates with Google Sign-In. I recommend reviewing
-            Google's Privacy Policy to understand their data practices:{" "}
+            Google&apos;s Privacy Policy to understand their data practices:{" "}
             <a
               href="https://policies.google.com/privacy"
               target="_blank"
