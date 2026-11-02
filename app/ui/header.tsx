@@ -64,9 +64,9 @@ export default function Header() {
           <Image
             src="/logo.png"
             alt="Couch to Crunch Logo"
-            width={200}
+            width={186}
             height={32}
-            className="hidden sm:block w-auto" 
+            className="hidden sm:block"
             loading="eager"
           />
         </Link>
