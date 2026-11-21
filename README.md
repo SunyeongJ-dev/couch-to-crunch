@@ -6,7 +6,7 @@ Couch to Crunch is a full-stack workout discovery app that organizes curated You
 
 [Live Demo](https://couch-to-crunch.vercel.app)
 
-![Couch to Crunch screenshot](./public/screenshot.png)
+[![Couch to Crunch demo](./public/demo.gif)](https://couch-to-crunch.vercel.app)
 
 ## Tech Stack
 
